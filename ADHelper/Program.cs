@@ -29,6 +29,7 @@ namespace ADHelper {
 				Console.WriteLine("Provide command line arguments, for example: ");
 				Console.WriteLine("1) ADHelper.exe -csv users.csv -config config.xml -task create_users");
 				Console.WriteLine("2) ADHelper.exe -csv users.csv -config config.xml -task set_passwords");
+				Console.ReadLine();
 				return;
             }
 			if(opts.Task.Length == 0) {

@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 namespace ADHelper.Tasks {
 	class Task_Batch {
 
-		bool hasHeaders = true;
 		private List<string> badSamAccountNames = new List<string>();
 		private Config.Options opts;
 
@@ -27,7 +26,7 @@ namespace ADHelper.Tasks {
 
 
 				//if headers, burn the first line
-				if (hasHeaders) {
+				if (opts.InDataHeaders) {
 					reader.ReadLine();
 				}
 				//read the rest of the file
