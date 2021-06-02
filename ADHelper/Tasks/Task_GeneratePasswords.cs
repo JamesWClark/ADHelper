@@ -6,6 +6,7 @@ using System.Text;
 using ADHelper.ADClasses;
 
 namespace ADHelper.Tasks {
+	[Obsolete("This is not a well developed class.")]
 	class Task_GeneratePasswords {
 
 		private int length;

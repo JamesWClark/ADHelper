@@ -23,46 +23,47 @@ namespace ADHelper {
 
 		static void Main(string[] args) {
 
-
 			Config.Options opts = new Config.Options(args);
 
-			switch(opts.Task) {
-				case "create_users":
-					//batch create new users from csv, set email property, set password, enable, join hard-coded ou
-					Tasks.Task_BatchCreateUsers create_users = new Tasks.Task_BatchCreateUsers(opts);
-					create_users.Run();
-					break;
-				case "set_passwords":
-					Tasks.Task_BatchSetPasswords set_passwords = new Tasks.Task_BatchSetPasswords(opts);
-					set_passwords.Run();
-					break;
-				default:
-					break;
+			if(args.Length == 0) {
+				Console.WriteLine("Provide command line arguments, for example: ");
+				Console.WriteLine("1) ADHelper.exe -csv users.csv -config config.xml -task create_users");
+				Console.WriteLine("2) ADHelper.exe -csv users.csv -config config.xml -task set_passwords");
+				return;
+            }
+			if(opts.Task.Length == 0) {
+				Console.WriteLine("Task needed.");
+				Console.WriteLine("-task create_user or set_password");
+				return;
             }
 
-
-			//string dn = "OU=2018,OU=Lightly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int";
-
-			/*
-			var username = ConfigurationManager.AppSettings["ldap_admin_username"];
-			var password = ConfigurationManager.AppSettings["ldap_admin_password"];
-			var file = ConfigurationManager.AppSettings["ldap_user_file"]; //this file burns the header
-			*/
-
-
-
-			// these don't work? batch password set is done from create users script
-			/*
-			//ADClasses.AD_UsersCollection users = new ADClasses.AD_UsersCollection(file, true);
-			//Tasks.Task_GeneratePasswords task = new Tasks.Task_GeneratePasswords(users);
-            */
-
-			/* how to write to file...
-			string path = @"test.txt";
-			using (var tw = new StreamWriter(path, true)) {
-				tw.WriteLine("Got it");
+			if(opts.CsvPath.Length == 0) {
+				Console.WriteLine("User data file needed.");
+				return;
             }
-			*/
+
+			if(opts.ConfigPath.Length == 0) {
+				Console.WriteLine("Config file needed.");
+				return;
+            }
+
+			if(opts.Task.Length > 0) {
+				Console.WriteLine("Attempting task with options: ");
+				Console.WriteLine($"Task: {opts.Task}");
+				Console.WriteLine($"Config File: {opts.ConfigPath}");
+				Console.WriteLine($"Domain: {opts.Domain}");
+				Console.WriteLine($"Distinguished Name: {opts.DistinguishedName}");
+				Console.WriteLine($"Input File: {opts.CsvPath}");
+				Console.WriteLine($"- has headers: {opts.InDataHeaders}");
+				if(opts.UsernameRegex.Length > 0) {
+					Console.WriteLine($"- regex filter: {opts.UsernameRegex}");
+                }
+				if(opts.Suffix.Length > 0) {
+					Console.WriteLine($"- suffix: {opts.Suffix}");
+                }
+				Tasks.Task_Batch task = new Tasks.Task_Batch(opts);
+				task.Run();
+			}
 		}
 	}
 }

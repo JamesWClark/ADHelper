@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 namespace ADHelper.Tasks {
+	[Obsolete("This is not a well developed class.")]
 	class Task_BatchSetPasswords {
 
 		bool hasHeaders = true;

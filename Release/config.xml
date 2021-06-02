@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <domain>student.rockhurst.int</domain>
-  <dn>OU=2018,OU=Lightly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</dn>
+  <distinguishedName>IDK</distinguishedName>
+  <usernames>
+	<regexFilter>[^-ñA-Za-z0-9-]</regexFilter>
+	<suffix>25</suffix>
+  </usernames>
+  <csv>
+	<headers>true</headers>
+  </csv>
 </configuration>

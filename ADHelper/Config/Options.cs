@@ -11,6 +11,8 @@ namespace ADHelper.Config {
         private string xmlPath, csvPath; // input files
         private string distinguishedName, domain; // domain
         private string task;
+        private string emailRegex, suffix = "";
+        private bool inDataHeaders = true;
 
         public Options(string[] args) {
             for(int i = 0; i < args.Length; i += 2) {
@@ -40,9 +42,6 @@ namespace ADHelper.Config {
                         throw new ArgumentException($"{args[i]} is not a valid option. ");
                 }
             }
-            Console.WriteLine("\nUser: " + uname);
-            Console.WriteLine("\nDomain: " + domain + "\nDN: " + distinguishedName);
-
         }
 
         private void LoadXML() {
@@ -52,14 +51,24 @@ namespace ADHelper.Config {
             } catch (FileNotFoundException) {
                 throw new ArgumentException($"File not found: {xmlPath}. ");
             }
+            distinguishedName = tryReadNode(doc, "/configuration/domain");
+            domain = tryReadNode(doc, "/configuration/distinguishedName");
+            emailRegex = tryReadNode(doc, "/configuration/usernames/regexFilter");
+            suffix = tryReadNode(doc, "/configuration/usernames/suffix");
+            inDataHeaders = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
+        }
+
+        private string tryReadNode(XmlDocument doc, string nodePath) {
+            string innerText;
             try {
-                XmlNode domainNode = doc.DocumentElement.SelectSingleNode("/configuration/domain");
-                XmlNode dnNode = doc.DocumentElement.SelectSingleNode("/configuration/dn");
-                distinguishedName = dnNode.InnerText;
-                domain = domainNode.InnerText;
-            } catch(NullReferenceException) {
-                throw new ArgumentException($"Malformed XML. ");
+                innerText = doc.DocumentElement.SelectSingleNode(nodePath).InnerText; 
+            } catch (NullReferenceException) {
+                Console.WriteLine($"Bad XML path: {nodePath}");
+                Console.WriteLine("See for example: ");
+                Console.WriteLine("https://raw.githubusercontent.com/JamesWClark/ADHelper/main/Release/config.xml");
+                throw new ArgumentException();
             }
+            return innerText;
         }
 
         public string Username {
@@ -82,8 +91,24 @@ namespace ADHelper.Config {
             get { return csvPath; }
         }
 
+        public string ConfigPath {
+            get { return xmlPath; }
+        }
+
         public string Task {
             get { return task; }
+        }
+
+        public string UsernameRegex {
+            get { return emailRegex; }
+        }
+
+        public string Suffix {
+            get { return suffix; }
+        }
+
+        public bool InDataHeaders {
+            get { return inDataHeaders; }
         }
     }
 }
