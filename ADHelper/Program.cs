@@ -30,11 +30,11 @@ namespace ADHelper {
 				case "create_users":
 					//batch create new users from csv, set email property, set password, enable, join hard-coded ou
 					Tasks.Task_BatchCreateUsers create_users = new Tasks.Task_BatchCreateUsers(opts);
-					//create_users.Run();
+					create_users.Run();
 					break;
 				case "set_passwords":
 					Tasks.Task_BatchSetPasswords set_passwords = new Tasks.Task_BatchSetPasswords(opts);
-					//set_passwords.Run();
+					set_passwords.Run();
 					break;
 				default:
 					break;

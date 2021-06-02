@@ -49,7 +49,7 @@ namespace ADHelper.Tasks {
 
                     // cleaning with regex
                     string domain = email.Split('@')[1];
-                    string pattern = "[^-ñA-Za-z0-9]";
+                    string pattern = "[^-ñA-Za-z0-9-]";
                     samAccountName = Regex.Replace(samAccountName, pattern, "");
                     fname = Regex.Replace(fname, pattern, "");
                     lname = Regex.Replace(lname, pattern, "");
