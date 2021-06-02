@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <domain>student.rockhurst.int</domain>
-  <distinguishedName>IDK</distinguishedName>
+  <distinguishedName>OU=2025,OU=Highly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</distinguishedName>
   <usernames>
 	<regexFilter>[^-ñA-Za-z0-9-]</regexFilter>
 	<suffix>25</suffix>
