@@ -28,21 +28,16 @@ Secondly, we need to establish our configuration. This is a complete config.xml 
 	<configuration>
 	  <domain>student.rockhurst.int</domain>
 	  <distinguishedName>OU=2025,OU=Highly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</distinguishedName>
-	  <usernames>
-		<regexFilter>[^A-Za-z0-9-]</regexFilter>
-		<suffix>25</suffix>
-	  </usernames>
 	  <csv>
 		<headers>true</headers>
 	  </csv>
 	</configuration>
 
+
 Some info about each field follows...
 	
  * `domain` - the active directory domain we are connecting to
  * `distinguishedName` - the name of the active directory org unit where users are to be created
- * `usernames/regexFilter` - email addresses and usernames will be purged according to the regex filter. leave blank if not desired.
- * `usernames/suffix` - a value ended to the end of every username, eg MarkBayhylle becomes MarkBayhylle25
  * `csv/headers` - true if the csv file has headers, false otherwise
 	
 For more info about regex, paste the above example or test others at regex101.com
