@@ -50,8 +50,8 @@ namespace ADHelper.Config {
             } catch (FileNotFoundException) {
                 throw new ArgumentException($"File not found: {xmlPath}. ");
             }
-            distinguishedName = tryReadNode(doc, "/configuration/domain");
-            domain = tryReadNode(doc, "/configuration/distinguishedName");
+            domain = tryReadNode(doc, "/configuration/domain");
+            distinguishedName = tryReadNode(doc, "/configuration/distinguishedName");
             inDataHeaders = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
         }
 
