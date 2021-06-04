@@ -53,8 +53,6 @@ namespace ADHelper.Config {
             }
             distinguishedName = tryReadNode(doc, "/configuration/domain");
             domain = tryReadNode(doc, "/configuration/distinguishedName");
-            emailRegex = tryReadNode(doc, "/configuration/usernames/regexFilter");
-            suffix = tryReadNode(doc, "/configuration/usernames/suffix");
             inDataHeaders = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
         }
 
