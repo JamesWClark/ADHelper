@@ -19,8 +19,8 @@ To use, we first need a table of data for users with headers fixed in this order
 
 FirstName 0 | NickName1 | MidName 2 | LastName 3 | FirstLast 4 | Email 5 | Sam 6 | 7? | Password 8
 --- | --- | --- | --- | --- | --- | --- | --- | ---
-Crash | Crash | Test | CrashTest | CrashTest25@amdg.rockhursths.edu | CrashTest | ABC123
-Test | Henry | Dummy | HenryDummy | HenryDummy25@amdg.rockhursths.edu | HenryDummy | DEF456
+Crash | Crash | | Test | CrashTest | CrashTest25@amdg.rockhursths.edu | CrashTest | | ABC123
+Test | Henry | | Dummy | HenryDummy | HenryDummy25@amdg.rockhursths.edu | HenryDummy | | DEF456
 
 Secondly, we need to establish our configuration. This is a complete config.xml example. Copy, paste, and edit this in xml format.
 
@@ -39,10 +39,10 @@ Secondly, we need to establish our configuration. This is a complete config.xml 
 
 Some info about each field follows...
 	
- * domain - the active directory domain we are connecting to
- * distinguishedName - the name of the active directory org unit where users are to be created
- * usernames/regexFilter - email addresses and usernames will be purged according to the regex filter. leave blank if not desired.
- * usernames/suffix - a value ended to the end of every username, eg MarkBayhylle becomes MarkBayhylle25
- * csv/headers - true if the csv file has headers, false otherwise
+ * `domain` - the active directory domain we are connecting to
+ * `distinguishedName` - the name of the active directory org unit where users are to be created
+ * `usernames/regexFilter` - email addresses and usernames will be purged according to the regex filter. leave blank if not desired.
+ * `usernames/suffix` - a value ended to the end of every username, eg MarkBayhylle becomes MarkBayhylle25
+ * `csv/headers` - true if the csv file has headers, false otherwise
 	
 For more info about regex, paste the above example or test others at regex101.com
