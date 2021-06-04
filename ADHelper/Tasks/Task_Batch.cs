@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 namespace ADHelper.Tasks {
 	class Task_Batch {
 
-		bool hasHeaders = true;
 		private List<string> badSamAccountNames = new List<string>();
 		private Config.Options opts;
 
@@ -27,7 +26,7 @@ namespace ADHelper.Tasks {
 
 
 				//if headers, burn the first line
-				if (hasHeaders) {
+				if (opts.InDataHeaders) {
 					reader.ReadLine();
 				}
 				//read the rest of the file
@@ -46,15 +45,16 @@ namespace ADHelper.Tasks {
 					string domain = email.Split('@')[1];
 					string password = columns[8];
 
+					/* let's not do this w/ regex... 
 					// cleaning with regex
 					if (opts.UsernameRegex.Length > 0) {
 						samAccountName = Regex.Replace(samAccountName, opts.UsernameRegex, "");
 						fname = Regex.Replace(fname, opts.UsernameRegex, "");
 						lname = Regex.Replace(lname, opts.UsernameRegex, "");
-					}
+					}*/
 
 					// bad decision? ignores email field from input file
-					email = samAccountName + opts.Suffix + "@" + domain;
+					// email = samAccountName + opts.Suffix + "@" + domain;
 
 					try {
 						using (var context = new PrincipalContext(ContextType.Domain, opts.Domain, opts.DistinguishedName)) {

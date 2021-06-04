@@ -29,6 +29,7 @@ namespace ADHelper {
 				Console.WriteLine("Provide command line arguments, for example: ");
 				Console.WriteLine("1) ADHelper.exe -csv users.csv -config config.xml -task create_users");
 				Console.WriteLine("2) ADHelper.exe -csv users.csv -config config.xml -task set_passwords");
+				Console.ReadLine();
 				return;
             }
 			if(opts.Task.Length == 0) {
@@ -55,12 +56,6 @@ namespace ADHelper {
 				Console.WriteLine($"Distinguished Name: {opts.DistinguishedName}");
 				Console.WriteLine($"Input File: {opts.CsvPath}");
 				Console.WriteLine($"- has headers: {opts.InDataHeaders}");
-				if(opts.UsernameRegex.Length > 0) {
-					Console.WriteLine($"- regex filter: {opts.UsernameRegex}");
-                }
-				if(opts.Suffix.Length > 0) {
-					Console.WriteLine($"- suffix: {opts.Suffix}");
-                }
 				Tasks.Task_Batch task = new Tasks.Task_Batch(opts);
 				task.Run();
 			}

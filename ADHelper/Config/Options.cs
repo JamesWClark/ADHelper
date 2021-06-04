@@ -11,7 +11,6 @@ namespace ADHelper.Config {
         private string xmlPath, csvPath; // input files
         private string distinguishedName, domain; // domain
         private string task;
-        private string emailRegex, suffix = "";
         private bool inDataHeaders = true;
 
         public Options(string[] args) {
@@ -95,14 +94,6 @@ namespace ADHelper.Config {
 
         public string Task {
             get { return task; }
-        }
-
-        public string UsernameRegex {
-            get { return emailRegex; }
-        }
-
-        public string Suffix {
-            get { return suffix; }
         }
 
         public bool InDataHeaders {

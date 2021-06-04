@@ -53,9 +53,10 @@
     <Compile Include="Config\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\Task_BatchCreateUsers.cs" />
+    <Compile Include="Tasks\Task_Batch.cs" />
     <Compile Include="Tasks\Task_BatchSetPasswords.cs" />
     <Compile Include="Tasks\Task_GeneratePasswords.cs" />
+    <Compile Include="Tasks\Task_SetMailAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
