@@ -51,6 +51,8 @@
     <Compile Include="ADClasses\AD_GlobalCatalog.cs" />
     <Compile Include="ADClasses\AD_UsersCollection.cs" />
     <Compile Include="Config\Options.cs" />
+    <Compile Include="Config\Patterns.cs" />
+    <Compile Include="Config\WordList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\Task_Batch.cs" />
@@ -58,10 +60,6 @@
     <Compile Include="Tasks\Task_GeneratePasswords.cs" />
     <Compile Include="Tasks\Task_SetMailAttribute.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

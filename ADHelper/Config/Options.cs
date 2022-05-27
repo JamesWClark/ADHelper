@@ -12,6 +12,11 @@ namespace ADHelper.Config {
         private string distinguishedName, domain; // domain
         private string task;
         private bool inDataHeaders = true;
+        private bool generatePasswords = false;
+        private bool alphatize = false;
+        // alphatize string - see Task_Batch.cs
+        // string mapDirty = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðñòóôõöùúûüýÿ";
+        // string mapClean = "SZszYAAAAAACEEEEIIIIDNOOOOOUUUUYaaaaaaceeeeiiiidnooooouuuuyy";
 
         public Options(string[] args) {
             for(int i = 0; i < args.Length; i += 2) {
@@ -50,9 +55,11 @@ namespace ADHelper.Config {
             } catch (FileNotFoundException) {
                 throw new ArgumentException($"File not found: {xmlPath}. ");
             }
-            domain = tryReadNode(doc, "/configuration/domain");
-            distinguishedName = tryReadNode(doc, "/configuration/distinguishedName");
-            inDataHeaders = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
+            domain              = tryReadNode(doc, "/configuration/domain");
+            distinguishedName   = tryReadNode(doc, "/configuration/distinguishedName");
+            inDataHeaders       = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
+            generatePasswords   = Convert.ToBoolean(tryReadNode(doc, "/configuration/password/generator"));
+            alphatize           = Convert.ToBoolean(tryReadNode(doc, "/configuration/username/alphatize"));
         }
 
         private string tryReadNode(XmlDocument doc, string nodePath) {
@@ -98,6 +105,14 @@ namespace ADHelper.Config {
 
         public bool InDataHeaders {
             get { return inDataHeaders; }
+        }
+
+        public bool GeneratePasswords {
+            get { return generatePasswords; }
+        }
+
+        public bool Alphatize {
+            get { return alphatize; }
         }
     }
 }

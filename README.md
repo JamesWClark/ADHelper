@@ -27,11 +27,19 @@ Secondly, we need to establish our configuration. This is a complete config.xml 
 	<?xml version="1.0" encoding="utf-8" ?>
 	<configuration>
 	  <domain>student.rockhurst.int</domain>
-	  <distinguishedName>OU=2025,OU=Highly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</distinguishedName>
+	  <distinguishedName>OU=2026,OU=Highly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</distinguishedName>
 	  <csv>
 		<headers>true</headers>
 	  </csv>
+	  <username>
+		<alphatize>true</alphatize>
+		<suffix>28</suffix>
+	  </username>
+	  <password>
+		<generator>true</generator>
+	  </password>
 	</configuration>
+
 
 
 Some info about each field follows...
