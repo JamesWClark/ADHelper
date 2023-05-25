@@ -24,8 +24,8 @@ To use, we first need a table of data for users. This can be created in Excel or
 
 Import ID | FirstName | LastName | SamAccount | Email | Password
 --- | --- | --- | --- | --- | ---
-0001 | Crash | Test | CrashTest25 | CrashTest25@amdg.rockhursths.edu | Abcd1234
-0002 | Henry | Dummy | HenryDummy25 | HenryDummy25@amdg.rockhursths.edu | Defg4567
+0001 | Crash | Test | CrashTest25 | CrashTest25<span>@</span>amdg.rockhursths.edu | Abcd1234
+0002 | Henry | Dummy | HenryDummy25 | HenryDummy25<span>@</span>amdg.rockhursths.edu | Defg4567
 
 Secondly, we need to establish our configuration. This is a complete config.xml example. Copy, paste, and edit this in xml format.
 
