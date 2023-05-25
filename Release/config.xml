@@ -5,12 +5,7 @@
   <csv>
 	<headers>true</headers>
   </csv>
-  <username>
-	<regexFilter>[^-ñA-Za-z0-9-]</regexFilter>
-	<alphatize>true</alphatize>
-	<suffix>28</suffix>
-  </username>
   <password>
-	<generator>true</generator>
+	<generator>false</generator>
   </password>
 </configuration>
