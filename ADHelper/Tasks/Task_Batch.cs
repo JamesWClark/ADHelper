@@ -45,9 +45,13 @@ namespace ADHelper.Tasks {
 			string pw = "";
 			Random rand = new Random();
 			for (int i = 0; i < n; i++) {
-				pw += Config.WordList.Adjectives[rand.Next(0, Config.WordList.Adjectives.Length)];
+				pw += Config.WordList.Words[rand.Next(0, Config.WordList.Words.Length)];
 			}
-			return pw + rand.Next(0,10) + rand.Next(0,10);
+			String end = "69"; // because high school students
+			while (end == "69") {
+				end = "" + rand.Next(0, 10) + rand.Next(0, 10);
+			}
+			return pw + end;
 		}
 
 		public void Run() {
@@ -165,11 +169,8 @@ namespace ADHelper.Tasks {
 									using (var user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samAccountName)) {
 										user.SetPassword(password);
 										using (var tw = new StreamWriter(success_file_path, true)) {
-											if(count == 0) {
-
-                                            }
 											tw.WriteLine($"{fname},{lname},{email},{samAccountName},{password}");
-											Console.WriteLine("password set: " + email);
+											Console.WriteLine($"Setting password for record: {fname},{lname},{email},{samAccountName},{password}");
 										}
 									}
 									break;

@@ -59,7 +59,7 @@ namespace ADHelper.Config {
             distinguishedName   = tryReadNode(doc, "/configuration/distinguishedName");
             inDataHeaders       = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
             generatePasswords   = Convert.ToBoolean(tryReadNode(doc, "/configuration/password/generator"));
-            alphatize           = Convert.ToBoolean(tryReadNode(doc, "/configuration/username/alphatize"));
+            // alphatize           = Convert.ToBoolean(tryReadNode(doc, "/configuration/username/alphatize"));
         }
 
         private string tryReadNode(XmlDocument doc, string nodePath) {

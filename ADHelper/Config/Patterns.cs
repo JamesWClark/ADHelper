@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ADHelper.Config {
     class Patterns {
+
+        // prereq - all of these patterns are lowercased elsewhere prior to being called here
+
         private static List<string> patternImportID = new List<string> {
             "id",
             "import", "importid", "import id",
@@ -26,7 +29,7 @@ namespace ADHelper.Config {
         };
 
         private static List<string> patternEmail = new List<string> {
-            "email", "email address", "emailaddress"
+            "email", "email address", "emailaddress", "e-mail"
         };
 
         private static List<string> patternSamAccountName = new List<string> {
