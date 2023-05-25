@@ -23,9 +23,9 @@ Our primary work flow is to...
 To use, we first need a table of data for users. This can be created in Excel or Google Sheets but must be saved to CSV format for this application. This app will attempt to detect headings but to be safe use the following in any order... 
 
 Import ID | FirstName | LastName | SamAccount | Email | Password
---- | --- | --- | --- | --- | --- | --- | --- | ---
+--- | --- | --- | --- | --- | ---
 0001 | Crash | Test | CrashTest25 | CrashTest25@amdg.rockhursths.edu | Abcd1234
-0002 | Henry | Dummy | HenryDummy25 | HenryDummy25@amdg.rockhursths.edu || Defg4567
+0002 | Henry | Dummy | HenryDummy25 | HenryDummy25@amdg.rockhursths.edu | Defg4567
 
 Secondly, we need to establish our configuration. This is a complete config.xml example. Copy, paste, and edit this in xml format.
 
