@@ -30,43 +30,22 @@ Samson |Braddock | SamsonBraddock28\@amdg.rockhursths.edu | Fix capitalization
 TO |Redmond | TORedmond28\@amdg.rockhursths.edu | Delete periods
 
 ## Step 3: Download the ADHelper Utility and Config File
+Download and extract the zip file:  
+https://github.com/JamesWClark/ADHelper/blob/main/Release/ADHelper.zip?raw=true
 
 
 ## Step 3: Export the Data
-Export your data to CSV format from whatever spreadsheet software you're using
+Export your data to CSV format, placing it in the same folder as the above zip.
 
-
-
-
-
-This utility was written in C# for the purpose of creating lists of active directory users and setting their passwords.
-
-It runs from command line only. Download a copy, then use it as follows.
-
-This is not a signed executable and your security software will warn you about using it. 
-
-Download: https://github.com/JamesWClark/ADHelper/blob/main/Release/ADHelper.zip?raw=true
-
-Unzip and run with the following tasks: `creat_users` or `set_passwords`
+## Step 4: Run a Task
+Run with the following tasks: `creat_users` or `set_passwords`
 
 `./ADHelper.exe -csv users.csv -xml config.xml -task create_users`  
 `./ADHelper.exe -csv users.csv -xml config.xml -task set_passwords`  
 
-Our primary work flow is to...
+## Appendix
 
-1) run the `create_users` to populate active directory
-2) manually run google apps directory sync
-3) verify google apps password sync is running correctly
-4) and finally, run the `set_password` task to sync local network and google cloud login passwords.
-
-To use, we first need a table of data for users. This can be created in Excel or Google Sheets but must be saved to CSV format for this application. This app will attempt to detect headings but to be safe use the following in any order... 
-
-Import ID | FirstName | LastName | SamAccount | Email | Password
---- | --- | --- | --- | --- | ---
-0001 | Crash | Test | CrashTest25 | CrashTest25<span>@</span>amdg.rockhursths.edu | Abcd1234
-0002 | Henry | Dummy | HenryDummy25 | HenryDummy25<span>@</span>amdg.rockhursths.edu | Defg4567
-
-Secondly, we need to establish our configuration. This is a complete config.xml example. Copy, paste, and edit this in xml format.
+The XML config looks like this:
 
 	<?xml version="1.0" encoding="utf-8" ?>
 	<configuration>
