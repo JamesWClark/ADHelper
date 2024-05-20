@@ -1,5 +1,44 @@
 # ADHelper
 
+## Step 1: Prepare the Data
+- It is likely helpful to have an import ID (student ID, employee ID, etc) to match with other data later.
+- Create a column for SAMAccount (concatenate existing columns).
+- Create a column for email address (concatenate SAMAccount with desired email suffix).
+- Remove unecessary columns.
+
+## Step 2: Sanitize User Input
+Consider some examples of inputs that would be invalid or potentially undesirable for an email address:
+
+Nick Name | Last Name | E-Mail | Reason
+--- | --- | --- | ---
+Connor | O'Brien | ConnorO'Brien28\@amdg.rockhursths.edu | Apostrophe
+Axel |Garcia-Soto | AxelGarcia-Soto28\@amdg.rockhursths.edu | Hyphen
+Aaron |De La Cruz Benavides | AaronDe La Cruz Benavides28\@amdg.rockhursths.edu | Spaces
+SAMSON |BRADDOCK | SAMSONBRADDOCK28\@amdg.rockhursths.edu | Capitalization
+T.O. |Redmond | T.O.Redmond28\@amdg.rockhursths.edu | Periods
+
+Here are some potential fixes:
+- Use find and replace to search for and replace hyphens, apostrophes, and spaces with nothing.
+- Manually fix capitalization.
+
+Nick Name | Last Name | E-Mail | Fix
+--- | --- | --- | ---
+Connor | OBrien | ConnorOBrien28\@amdg.rockhursths.edu | Delete apostrophe
+Axel |GarciaSoto | AxelGarciaSoto28\@amdg.rockhursths.edu | Delete hyphen
+Aaron |DeLaCruzBenavides | AaronDeLaCruzBenavides28\@amdg.rockhursths.edu | Delete spaces
+Samson |Braddock | SamsonBraddock28\@amdg.rockhursths.edu | Fix capitalization
+TO |Redmond | TORedmond28\@amdg.rockhursths.edu | Delete periods
+
+## Step 3: Download the ADHelper Utility and Config File
+
+
+## Step 3: Export the Data
+Export your data to CSV format from whatever spreadsheet software you're using
+
+
+
+
+
 This utility was written in C# for the purpose of creating lists of active directory users and setting their passwords.
 
 It runs from command line only. Download a copy, then use it as follows.

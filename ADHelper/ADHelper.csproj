@@ -53,6 +53,7 @@
     <Compile Include="Config\Options.cs" />
     <Compile Include="Config\Patterns.cs" />
     <Compile Include="Config\WordList.cs" />
+    <Compile Include="Config\WordList5.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\Task_Batch.cs" />

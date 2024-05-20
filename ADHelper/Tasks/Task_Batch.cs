@@ -45,7 +45,7 @@ namespace ADHelper.Tasks {
 			string pw = "";
 			Random rand = new Random();
 			for (int i = 0; i < n; i++) {
-				pw += Config.WordList.Words[rand.Next(0, Config.WordList.Words.Length)];
+				pw += Config.WordList5.Words[rand.Next(0, Config.WordList.Words.Length)];
 			}
 			String end = "69"; // because high school students
 			while (end == "69") {

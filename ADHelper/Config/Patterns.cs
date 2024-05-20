@@ -18,13 +18,13 @@ namespace ADHelper.Config {
         };
 
         private static List<string> patternFirstName = new List<string> {
-            "first", "firstname", "first name", 
+            "first", "firstname", "first name", "fname",
             "givenname", "given name",
             "preferred name", "preferred"
         };
 
         private static List<string> patternLastName = new List<string> {
-            "last", "lastname", "last name",
+            "last", "lastname", "last name", "lname",
             "surname", "familyname", "family name"
         };
 
