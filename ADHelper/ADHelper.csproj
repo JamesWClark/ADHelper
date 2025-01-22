@@ -4,6 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>ADHelper</RootNamespace>
     <AssemblyName>ADHelper</AssemblyName>
+    <NoWarn>$(NoWarn);CA1416</NoWarn><!-- Suppressing CA1416 warnings as these APIs are Windows-specific -->
+    <PlatformTarget>x86</PlatformTarget>
+    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
