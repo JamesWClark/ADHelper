@@ -15,6 +15,7 @@
                 "--self-contained",
                 "true",
                 "/p:PublishSingleFile=true",
+                "/p:PublishDir=${workspaceFolder}/ADHelper/bin/publish",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -31,6 +32,7 @@
             "args": [
                 "publish",
                 "${workspaceFolder}/ADHelper.sln",
+                "/p:PublishDir=${workspaceFolder}/ADHelper/bin/publish",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
