@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <domain>example.com</domain>
+  <distinguishedName>DC=example,DC=com</distinguishedName>
+  <csv>
+    <headers>true</headers>
+  </csv>
+  <password>
+    <generator>false</generator>
+  </password>
+</configuration>

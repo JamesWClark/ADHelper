@@ -1,0 +1,3 @@
+ImportID,FirstName,LastName,Email,SamAccountName,Password
+1,John,Doe,john.doe@example.com,jdoe,Password123
+2,Jane,Smith,jane.smith@example.com,jsmith,Password456
