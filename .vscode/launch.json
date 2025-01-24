@@ -6,10 +6,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ADHelper/bin/Debug/net8.0/ADHelper.dll",
+            "program": "${workspaceFolder}/ADHelper/bin/publish/ADHelper.exe",
             "args": [
-                "-csv", "${workspaceFolder}/TestData/users.csv",
-                "-xml", "${workspaceFolder}/TestData/config.xml",
+                "-csv", "${workspaceFolder}/ADHelper/TestData/users.csv",
+                "-xml", "${workspaceFolder}/ADHelper/TestData/config.xml",
                 "-task", "create_users"
             ],
             "cwd": "${workspaceFolder}/ADHelper",
