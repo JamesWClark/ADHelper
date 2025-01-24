@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace ADHelper.Config {
-    class WordList {
+    class WordList7 {
 
         // a pruned set of 7 letter words sourced from
         // https://byjus.com/english/7-letter-words/

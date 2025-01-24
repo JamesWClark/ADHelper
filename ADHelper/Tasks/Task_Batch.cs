@@ -19,48 +19,21 @@ namespace ADHelper.Tasks {
             _outputDirectory = outputDirectory;
         }
 
-        public string alphatize(string dirty) {
-            /*
-            string mapDirty = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðñòóôõöùúûüýÿ";
-            string mapClean = "SZszYAAAAAACEEEEIIIIDNOOOOOUUUUYaaaaaaceeeeiiiidnooooouuuuyy";
-            string clean = "";
-            bool isCleanCharacter = true;
-            for(int i = 0; i < dirty.Length; i++) {
-                for(int k = 0; i < mapDirty.Length; k++) {
-                    if (dirty[i] == mapDirty[k]) {
-                        clean += mapClean[k];
-                        isCleanCharacter = false;
-                        break;
-                    }
-                }
-                if(!isCleanCharacter) {
-                    isCleanCharacter = true;
-                } else {
-                    clean += dirty[i]; 
-                }
-            }
-            return clean;
-            */
-            return dirty;
-        }
-
-        public static string WordListPassword(int n) {
-            string pw = "";
-            Random rand = new Random();
-            for (int i = 0; i < n; i++) {
-                pw += Config.WordList5.Words[rand.Next(0, Config.WordList5.Words.Length)];
-            }
-            String end = "69"; // because high school students
-            while (end == "69") {
-                end = "" + rand.Next(0, 10) + rand.Next(0, 10);
-            }
-            return pw + end;
-        }
-
         public void Run() {
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
-                var headerIndices = HeaderIndexUtil.GetHeaderIndices(headers);
+                var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
+
+                // Log headers and header indices
+                Console.WriteLine("Headers:");
+                foreach (var header in headers) {
+                    Console.WriteLine(header);
+                }
+
+                Console.WriteLine("Header Indices:");
+                foreach (var key in headerIndices.Keys) {
+                    Console.WriteLine($"{key}: {headerIndices[key]}");
+                }
 
                 string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
                 string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
@@ -74,14 +47,14 @@ namespace ADHelper.Tasks {
                         continue;
                     }
 
-                    string importID = alphatize(columns[headerIndices["ImportID"]].Trim());
-                    string fname = alphatize(columns[headerIndices["FirstName"]].Trim());
-                    string lname = alphatize(columns[headerIndices["LastName"]].Trim());
-                    string samAccountName = alphatize(columns[headerIndices["SamAccountName"]].Trim());
-                    string email = alphatize(columns[headerIndices["Email"]].Trim());
+                    string importID = Alphatizer.Alphatize(columns[headerIndices["ImportID"]].Trim());
+                    string fname = Alphatizer.Alphatize(columns[headerIndices["FirstName"]].Trim());
+                    string lname = Alphatizer.Alphatize(columns[headerIndices["LastName"]].Trim());
+                    string samAccountName = Alphatizer.Alphatize(columns[headerIndices["SamAccountName"]].Trim());
+                    string email = Alphatizer.Alphatize(columns[headerIndices["Email"]].Trim());
 
                     string domain = email.Split('@')[1];
-                    string password = opts.GeneratePasswords ? WordListPassword(2) : columns[headerIndices["Password"]].Trim();
+                    string password = opts.GeneratePasswords ? PasswordGenerator.WordListPassword(2) : columns[headerIndices["Password"]].Trim();
 
                     try {
                         switch (opts.Task) {

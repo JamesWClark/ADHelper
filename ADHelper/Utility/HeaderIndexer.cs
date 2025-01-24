@@ -5,7 +5,7 @@ using ADHelper.Config;
 
 namespace ADHelper.Utility
 {
-    public static class HeaderIndexUtil
+    public static class HeaderIndexer
     {
         public static Dictionary<string, int> GetHeaderIndices(string[] headers)
         {
