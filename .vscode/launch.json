@@ -14,7 +14,10 @@
             ],
             "cwd": "${workspaceFolder}/ADHelper",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "env": {
+                "RUN_MODE": "VSCode"
+            }
         },
         {
             "name": ".NET Core Attach",
