@@ -1,7 +1,7 @@
 .vs
 desktop.ini
 
-ADHelper/TestData/ADHelper.exe
+ADHelper/TestData/*
 ADHelper/TestData/Receipts/*
 ADHelper/failed*
 ADHelper/succeeded*
