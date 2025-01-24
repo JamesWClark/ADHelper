@@ -1,2 +1,6 @@
 .vs
 desktop.ini
+
+ADHelper/TestData/ADHelper.exe
+ADHelper/TestData/failed*
+ADHelper/TestData/succeeded*
