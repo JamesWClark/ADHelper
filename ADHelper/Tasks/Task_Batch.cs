@@ -20,45 +20,37 @@ namespace ADHelper.Tasks {
         }
 
         public void Run() {
+            Console.WriteLine("Task_Batch Run method called");
+        
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
+                Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
+                Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
+        
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
-
-                // Log headers and header indices
-                Console.WriteLine("Headers:");
-                foreach (var header in headers) {
-                    Console.WriteLine(header);
-                }
-
-                Console.WriteLine("Header Indices:");
-                foreach (var key in headerIndices.Keys) {
-                    Console.WriteLine($"{key}: {headerIndices[key]}");
-                }
-
+        
                 string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
                 string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
-
+        
                 var userManager = new UserManager(opts.Domain, opts.DistinguishedName);
-
+                Console.WriteLine($"UserManager initialized with Domain: {opts.Domain}, DistinguishedName: {opts.DistinguishedName}");
+        
                 int count = 0;
                 foreach (var columns in lines) {
-                    if (count == 0 && opts.InDataHeaders) {
-                        count++;
-                        continue;
-                    }
-
                     string importID = Alphatizer.Alphatize(columns[headerIndices["ImportID"]].Trim());
                     string fname = Alphatizer.Alphatize(columns[headerIndices["FirstName"]].Trim());
                     string lname = Alphatizer.Alphatize(columns[headerIndices["LastName"]].Trim());
                     string samAccountName = Alphatizer.Alphatize(columns[headerIndices["SamAccountName"]].Trim());
                     string email = Alphatizer.Alphatize(columns[headerIndices["Email"]].Trim());
-
+        
                     string domain = email.Split('@')[1];
                     string password = opts.GeneratePasswords ? PasswordGenerator.WordListPassword(2) : columns[headerIndices["Password"]].Trim();
-
+        
                     try {
+                        Console.WriteLine($"Processing user: {email}, {samAccountName}");
                         switch (opts.Task) {
                             case "create_users":
+                                Console.WriteLine($"Creating user: {email}");
                                 userManager.CreateUser(fname, lname, samAccountName, email, password);
                                 using (var tw = new StreamWriter(success_file_path, true)) {
                                     if (count == 0) {
@@ -69,6 +61,7 @@ namespace ADHelper.Tasks {
                                 }
                                 break;
                             case "set_passwords":
+                                Console.WriteLine($"Setting password for user: {samAccountName}");
                                 userManager.SetPassword(samAccountName, password);
                                 using (var tw = new StreamWriter(success_file_path, true)) {
                                     tw.WriteLine($"{fname},{lname},{email},{samAccountName},{password}");
@@ -95,6 +88,7 @@ namespace ADHelper.Tasks {
             foreach (string s in badSamAccountNames) {
                 Console.WriteLine(s);
             }
+            Console.WriteLine();
         }
     }
 }
