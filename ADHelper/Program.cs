@@ -51,7 +51,7 @@ namespace ADHelper {
             string outputDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             if (Environment.GetEnvironmentVariable("RUN_MODE") == "VSCode") {
-                outputDirectory = Path.Combine(outputDirectory, "..", "..", "..", "ADHelper", "TestData");
+                outputDirectory = Path.Combine(outputDirectory, "..", "..", "..", "ADHelper", "TestData", "Receipts");
             }
 
             if(opts.Task.Length > 0) {

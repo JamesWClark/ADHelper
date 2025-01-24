@@ -12,10 +12,7 @@
                 "Release",
                 "-r",
                 "win-x86",
-                "--self-contained",
-                "true",
                 "/p:PublishSingleFile=true",
-                "/p:PublishTrimmed=true",
                 "/p:PublishDir=${workspaceFolder}/ADHelper/bin/publish",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
@@ -38,10 +35,7 @@
                 "Release",
                 "-r",
                 "win-x86",
-                "--self-contained",
-                "true",
-                "/p:PublishSingleFile=true",
-                "/p:PublishTrimmed=true"
+                "/p:PublishSingleFile=true"
             ],
             "problemMatcher": "$msCompile"
         }

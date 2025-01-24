@@ -2,7 +2,6 @@
 desktop.ini
 
 ADHelper/TestData/ADHelper.exe
-ADHelper/TestData/failed*
-ADHelper/TestData/succeeded*
+ADHelper/TestData/Receipts/*
 ADHelper/failed*
 ADHelper/succeeded*

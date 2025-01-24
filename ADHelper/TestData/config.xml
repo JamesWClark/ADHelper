@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-  <domain>example.com</domain>
-  <distinguishedName>DC=example,DC=com</distinguishedName>
+  <domain>Schafer.local</domain>
+  <distinguishedName>OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local</distinguishedName>
   <csv>
     <headers>true</headers>
   </csv>
