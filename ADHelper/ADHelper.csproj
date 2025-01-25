@@ -8,7 +8,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <PublishSingleFile>true</PublishSingleFile><!-- Enable single file publish -->
-    <SelfContained>true</SelfContained><!-- Enable self-contained deployment -->
+    <SelfContained>false</SelfContained><!-- Disable self-contained deployment when COM hosting is enabled -->
     <EnableComHosting>true</EnableComHosting><!-- Enable COM support -->
     <PublishTrimmed>false</PublishTrimmed><!-- Disable trimming -->
   </PropertyGroup>
@@ -16,6 +16,7 @@
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="8.0.0" />
     <PackageReference Include="CsvHelper" Version="27.2.1" />
+    <PackageReference Include="EPPlus" Version="5.8.3" />
   </ItemGroup>
   <ItemGroup>
     <TrimmerRootAssembly Include="System.DirectoryServices" />
