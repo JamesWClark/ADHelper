@@ -21,34 +21,34 @@ namespace ADHelper.Tasks {
 
         public void Run() {
             Console.WriteLine("Task_Batch Run method called");
-
+        
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
                 Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
                 Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
-
+        
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
-
+        
                 string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
                 string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
-
+        
                 var userManager = new UserManager(opts.Domain, opts.DistinguishedName);
                 Console.WriteLine($"UserManager initialized with Domain: {opts.Domain}, DistinguishedName: {opts.DistinguishedName}");
-
+        
                 int count = 0;
                 foreach (var columns in lines) {
                     var userFields = new Dictionary<string, string>();
                     foreach (var header in headerIndices.Keys) {
                         userFields[header] = columns[headerIndices[header]].Trim();
                     }
-
+        
                     // Debugging statement to check if SamAccountName is present
                     if (!userFields.ContainsKey("SamAccountName")) {
                         Console.WriteLine("SamAccountName key is missing in userFields dictionary.");
                         Console.WriteLine("Available keys: " + string.Join(", ", userFields.Keys));
                         continue;
                     }
-
+        
                     try {
                         Console.WriteLine($"Processing user: {userFields["Email"]}, {userFields["SamAccountName"]}");
                         switch (opts.Task) {
@@ -78,7 +78,10 @@ namespace ADHelper.Tasks {
                         Console.WriteLine("failed: " + userFields["Email"]);
                         Console.WriteLine(ex.Message);
                         using (var tw = new StreamWriter(fail_file_path, true)) {
-                            tw.WriteLine($"{userFields["SamAccountName"]},{userFields["Email"]},{ex.Message}");
+                            if (count == 0) {
+                                tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
+                            }
+                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message}");
                         }
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                     }
