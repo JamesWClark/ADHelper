@@ -42,13 +42,6 @@ namespace ADHelper.Tasks {
                         userFields[header] = columns[headerIndices[header]].Trim();
                     }
         
-                    // Debugging statement to check if SamAccountName is present
-                    if (!userFields.ContainsKey("SamAccountName")) {
-                        Console.WriteLine("SamAccountName key is missing in userFields dictionary.");
-                        Console.WriteLine("Available keys: " + string.Join(", ", userFields.Keys));
-                        continue;
-                    }
-        
                     try {
                         Console.WriteLine($"Processing user: {userFields["Email"]}, {userFields["SamAccountName"]}");
                         switch (opts.Task) {
@@ -81,7 +74,7 @@ namespace ADHelper.Tasks {
                             if (count == 0) {
                                 tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
                             }
-                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message}");
+                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
                         }
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                     }
