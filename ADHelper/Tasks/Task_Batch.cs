@@ -32,15 +32,19 @@ namespace ADHelper.Tasks {
                 string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
                 string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
         
-                var userManager = new UserManager(opts.Domain, opts.DistinguishedName);
-                Console.WriteLine($"UserManager initialized with Domain: {opts.Domain}, DistinguishedName: {opts.DistinguishedName}");
-        
                 int count = 0;
                 foreach (var columns in lines) {
                     var userFields = new Dictionary<string, string>();
                     foreach (var header in headerIndices.Keys) {
                         userFields[header] = columns[headerIndices[header]].Trim();
                     }
+
+                    // Check for Domain and DistinguishedName in the CSV
+                    string domain = userFields.ContainsKey("Domain") && !string.IsNullOrEmpty(userFields["Domain"]) ? userFields["Domain"] : opts.Domain;
+                    string distinguishedName = !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
+
+                    var userManager = new UserManager(domain, distinguishedName);
+                    Console.WriteLine($"UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
         
                     try {
                         Console.WriteLine($"Processing user: {userFields["Email"]}, {userFields["SamAccountName"]}");

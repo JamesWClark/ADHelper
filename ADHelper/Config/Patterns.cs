@@ -27,7 +27,9 @@ namespace ADHelper.Config {
             { "JobTitle", new List<string> { "job title", "jobtitle", "title", "position" } },
             { "Department", new List<string> { "department", "dept" } },
             { "Company", new List<string> { "company", "organization", "org" } },
-            { "ManagerName", new List<string> { "manager", "manager name", "managername", "supervisor", "supervisor name", "supervisorname" } }
+            { "ManagerName", new List<string> { "manager", "manager name", "managername", "supervisor", "supervisor name", "supervisorname" } },
+            { "DistinguishedName", new List<string> { "distinguished name", "distinguishedname", "dn" } },
+            { "Domain", new List<string> { "domain", "domain name", "domainname" } }
         };
 
         public static string GetPattern(string key) {
