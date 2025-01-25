@@ -36,7 +36,11 @@ namespace ADHelper.Tasks {
                 foreach (var columns in lines) {
                     var userFields = new Dictionary<string, string>();
                     foreach (var header in headerIndices.Keys) {
-                        userFields[header] = columns[headerIndices[header]].Trim();
+                        if (headerIndices[header] < columns.Length) {
+                            userFields[header] = columns[headerIndices[header]].Trim();
+                        } else {
+                            userFields[header] = null; // or an appropriate default value
+                        }
                     }
 
                     // Check for Domain and DistinguishedName in the CSV
