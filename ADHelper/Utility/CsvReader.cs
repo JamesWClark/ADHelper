@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Globalization;
 
 namespace ADHelper.Utility {
     class CsvReader {
@@ -8,16 +11,26 @@ namespace ADHelper.Utility {
             var lines = new List<string[]>();
             string[] headers = null;
 
-            using (var reader = new StreamReader(filePath)) {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) {
+                HasHeaderRecord = hasHeaders,
+                TrimOptions = TrimOptions.Trim,
+                BadDataFound = null
+            };
+
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvHelper.CsvReader(reader, config)) {
                 if (hasHeaders) {
-                    string headerLine = reader.ReadLine(); // Read header line
-                    if (headerLine != null) {
-                        headers = headerLine.Split(',');
-                    }
+                    csv.Read();
+                    csv.ReadHeader();
+                    headers = csv.HeaderRecord;
                 }
-                string line;
-                while ((line = reader.ReadLine()) != null) {
-                    lines.Add(line.Split(','));
+
+                while (csv.Read()) {
+                    var row = new List<string>();
+                    for (int i = 0; csv.TryGetField(i, out string field); i++) {
+                        row.Add(field);
+                    }
+                    lines.Add(row.ToArray());
                 }
             }
 
