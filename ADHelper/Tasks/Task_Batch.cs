@@ -32,6 +32,9 @@ namespace ADHelper.Tasks {
                 string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
                 string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
         
+                bool successHeadersWritten = false;
+                bool failHeadersWritten = false;
+        
                 int count = 0;
                 foreach (var columns in lines) {
                     var userFields = new Dictionary<string, string>();
@@ -42,11 +45,11 @@ namespace ADHelper.Tasks {
                             userFields[header] = null; // or an appropriate default value
                         }
                     }
-
+        
                     // Check for Domain and DistinguishedName in the CSV
                     string domain = userFields.ContainsKey("Domain") && !string.IsNullOrEmpty(userFields["Domain"]) ? userFields["Domain"] : opts.Domain;
-                    string distinguishedName = !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
-
+                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
+        
                     var userManager = new UserManager(domain, distinguishedName);
                     Console.WriteLine($"UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
         
@@ -57,8 +60,9 @@ namespace ADHelper.Tasks {
                                 Console.WriteLine($"Creating user: {userFields["Email"]}");
                                 userManager.CreateUser(userFields);
                                 using (var tw = new StreamWriter(success_file_path, true)) {
-                                    if (count == 0) {
+                                    if (!successHeadersWritten) {
                                         tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Password");
+                                        successHeadersWritten = true;
                                     }
                                     tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                                     Console.WriteLine("created: " + userFields["Email"]);
@@ -68,6 +72,10 @@ namespace ADHelper.Tasks {
                                 Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
                                 userManager.SetPassword(userFields["SamAccountName"], userFields["Password"]);
                                 using (var tw = new StreamWriter(success_file_path, true)) {
+                                    if (!successHeadersWritten) {
+                                        tw.WriteLine("First Name,Last Name,Email,AD Login,Password");
+                                        successHeadersWritten = true;
+                                    }
                                     tw.WriteLine($"{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                                     Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                                 }
@@ -79,8 +87,9 @@ namespace ADHelper.Tasks {
                         Console.WriteLine("failed: " + userFields["Email"]);
                         Console.WriteLine(ex.Message);
                         using (var tw = new StreamWriter(fail_file_path, true)) {
-                            if (count == 0) {
+                            if (!failHeadersWritten) {
                                 tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
+                                failHeadersWritten = true;
                             }
                             tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
                         }
