@@ -31,7 +31,8 @@ namespace ADHelper.Config {
             { "ManagerName", new List<string> { "manager", "manager name", "managername", "supervisor", "supervisor name", "supervisorname" } },
             { "DistinguishedName", new List<string> { "distinguished name", "distinguishedname", "dn" } },
             { "Domain", new List<string> { "domain", "domain name", "domainname" } },
-            { "HomeDirectory", new List<string> { "home directory", "homedirectory", "home dir", "homedir", "home", "folder", "home folder", "homefolder", "netshare", "network share", "networkshare" } }
+            { "HomeDirectory", new List<string> { "home directory", "homedirectory", "home dir", "homedir", "home", "folder", "home folder", "homefolder", "netshare", "network share", "networkshare" } },
+            { "HomeDrive", new List<string> { "home drive", "homedrive", "drive letter", "drive", "letter" } }
         };
         public static string GetPattern(string key) {
             if (patternDictionary.ContainsKey(key)) {

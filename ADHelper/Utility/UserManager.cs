@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
+using System.IO;
+using System.Security.AccessControl;
 
 namespace ADHelper.Utility {
     class UserManager {
@@ -38,7 +40,30 @@ namespace ADHelper.Utility {
                     SetProperty(newUser, "JobTitle", userFields);
                     SetProperty(newUser, "Department", userFields);
                     SetProperty(newUser, "Company", userFields);
-                    // SetProperty(newUser, "ManagerName", userFields);
+                    SetProperty(newUser, "ManagerName", userFields);
+
+                    // Set the manager
+                    if (userFields.ContainsKey("ManagerName") && !string.IsNullOrEmpty(userFields["ManagerName"])) {
+                        string managerDn = GetManagerDn(userFields["ManagerName"]);
+                        newUser.Properties["manager"].Value = managerDn;
+                    }
+
+                    // Set the home directory and home drive
+                    if (userFields.ContainsKey("HomeDrive") && !userFields.ContainsKey("HomeDirectory")) {
+                        throw new Exception("HomeDrive is specified without HomeDirectory, which is invalid.");
+                    }
+
+                    if (userFields.ContainsKey("HomeDirectory") && !string.IsNullOrEmpty(userFields["HomeDirectory"])) {
+                        string homeDirectory = userFields["HomeDirectory"].Replace("%username%", userFields["SamAccountName"]);
+                        newUser.Properties["homeDirectory"].Value = homeDirectory;
+
+                        if (userFields.ContainsKey("HomeDrive") && !string.IsNullOrEmpty(userFields["HomeDrive"])) {
+                            newUser.Properties["homeDrive"].Value = userFields["HomeDrive"];
+                        }
+
+                        // Create the network folder on the server
+                        CreateNetworkFolder(homeDirectory, userFields["SamAccountName"]);
+                    }
 
                     newUser.CommitChanges();
 
@@ -56,25 +81,35 @@ namespace ADHelper.Utility {
             }
         }
 
-        // // Access the DirectoryEntry to set additional attributes
-        // DirectoryEntry directoryEntry = (DirectoryEntry)user.GetUnderlyingObject();
+        private void CreateNetworkFolder(string path, string username) {
+            if (!Directory.Exists(path)) {
+                Directory.CreateDirectory(path);
 
-        // // Set additional fields if they exist
-        // 
-        // 
-        // if (userFields.ContainsKey("TelephoneNumber")) directoryEntry.Properties["telephoneNumber"].Value = userFields["TelephoneNumber"];
-        // if (userFields.ContainsKey("Street")) directoryEntry.Properties["streetAddress"].Value = userFields["Street"];
-        // if (userFields.ContainsKey("City")) directoryEntry.Properties["l"].Value = userFields["City"];
-        // if (userFields.ContainsKey("State")) directoryEntry.Properties["st"].Value = userFields["State"];
-        // if (userFields.ContainsKey("PostalCode")) directoryEntry.Properties["postalCode"].Value = userFields["PostalCode"];
-        // if (userFields.ContainsKey("Mobile")) directoryEntry.Properties["mobile"].Value = userFields["Mobile"];
-        // if (userFields.ContainsKey("JobTitle")) directoryEntry.Properties["title"].Value = userFields["JobTitle"];
-        // if (userFields.ContainsKey("Department")) directoryEntry.Properties["department"].Value = userFields["Department"];
-        // if (userFields.ContainsKey("Company")) directoryEntry.Properties["company"].Value = userFields["Company"];
-        // if (userFields.ContainsKey("ManagerName")) directoryEntry.Properties["manager"].Value = userFields["ManagerName"];
+                // Set permissions
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                DirectorySecurity security = directoryInfo.GetAccessControl();
+                security.AddAccessRule(new FileSystemAccessRule(username, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+                directoryInfo.SetAccessControl(security);
 
-        // // Commit the changes to the directory
-        // directoryEntry.CommitChanges();
+                Console.WriteLine($"Network folder created at {path} for user {username}");
+            } else {
+                Console.WriteLine($"Network folder already exists at {path}");
+            }
+        }
+
+        private string GetManagerDn(string managerSamAccountName) {
+            using (var searcher = new DirectorySearcher(new DirectoryEntry($"LDAP://{_context.Name}"))) {
+                searcher.Filter = $"(&(objectClass=user)(samAccountName={managerSamAccountName}))";
+                searcher.PropertiesToLoad.Add("distinguishedName");
+        
+                var result = searcher.FindOne();
+                if (result != null) {
+                    return result.Properties["distinguishedName"][0].ToString();
+                } else {
+                    throw new Exception($"Manager with SamAccountName '{managerSamAccountName}' not found.");
+                }
+            }
+        }
 
         private static readonly Dictionary<string, string> ADPropertyMap = new Dictionary<string, string> {
             { "Description", "description" },
@@ -89,7 +124,8 @@ namespace ADHelper.Utility {
             { "Department", "department" },
             { "Company", "company" },
             { "ManagerName", "manager" },
-            { "HomeDirectory", "homeDirectory" }
+            { "HomeDirectory", "homeDirectory" },
+            { "HomeDrive", "homeDrive" }
         };
 
         private void SetProperty(DirectoryEntry entry, string patternKey, Dictionary<string, string> userFields) {
