@@ -1,7 +1,7 @@
-ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,DN
-12,John,Doe,johndoe@example.com,johndoe,Password123,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local"
-13,Jane,Smith,janesmith@example.com,janesmith,Password456,,,"OU=201,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local"
+ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,DN,Phone,Street,City,State,Zip,Title,Dept,Manager,Company,HomeDirectory
+12,John,Doe,johndoe@example.com,johndoe,Password123,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",123-456-7890,123 Way,Wash,CO,80907,Savant,Dark Arts,Bilbo Baggins,Hogwarts
+13,Jane,Smith,janesmith@example.com,janesmith,Password456,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local"
 14,Michael,Brown,michaelbrown@example.com,michaelbrown,Password789
 15,Emily,Davis,emilydavis@example.com,emilydavis,Password101
 16,David,Wilson,davidwilson@example.com,davidwilson,Password202
-17,Emma,Johnson,emmajohnson@example.com,emmajohnson,Password303,Newb
+17,Emma,Johnson,emmajohnson@example.com,emmajohnson,Password303,Newb,Cartwright,""

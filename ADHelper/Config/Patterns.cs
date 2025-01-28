@@ -23,15 +23,16 @@ namespace ADHelper.Config {
             { "City", new List<string> { "city", "town" } },
             { "State", new List<string> { "state", "province", "state/province", "stateprovince" } },
             { "PostalCode", new List<string> { "postal code", "postalcode", "zip", "zip code", "zipcode" } },
+            { "Country", new List<string> { "country", "nation", "country name", "countryname" } },
             { "Mobile", new List<string> { "mobile", "mobile phone", "mobilephone", "cell", "cell phone", "cellphone" } },
             { "JobTitle", new List<string> { "job title", "jobtitle", "title", "position" } },
             { "Department", new List<string> { "department", "dept" } },
             { "Company", new List<string> { "company", "organization", "org" } },
             { "ManagerName", new List<string> { "manager", "manager name", "managername", "supervisor", "supervisor name", "supervisorname" } },
             { "DistinguishedName", new List<string> { "distinguished name", "distinguishedname", "dn" } },
-            { "Domain", new List<string> { "domain", "domain name", "domainname" } }
+            { "Domain", new List<string> { "domain", "domain name", "domainname" } },
+            { "HomeDirectory", new List<string> { "home directory", "homedirectory", "home dir", "homedir", "home", "folder", "home folder", "homefolder", "netshare", "network share", "networkshare" } }
         };
-
         public static string GetPattern(string key) {
             if (patternDictionary.ContainsKey(key)) {
                 return "(" + String.Join("|", patternDictionary[key].ToArray()) + ")";

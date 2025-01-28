@@ -27,18 +27,18 @@ namespace ADHelper.Utility {
                     newUser.Properties["mail"].Value = userFields["Email"];
 
                     // Optional fields
-                    // SetProperty(newUser, "description", userFields);
-                    // SetProperty(newUser, "physicalDeliveryOfficeName", userFields);
-                    // SetProperty(newUser, "telephoneNumber", userFields);
-                    // SetProperty(newUser, "streetAddress", userFields);
-                    // SetProperty(newUser, "l", userFields);
-                    // SetProperty(newUser, "st", userFields);
-                    // SetProperty(newUser, "postalCode", userFields);
-                    // SetProperty(newUser, "mobile", userFields);
-                    // SetProperty(newUser, "title", userFields);
-                    // SetProperty(newUser, "department", userFields);
-                    // SetProperty(newUser, "company", userFields);
-                    // SetProperty(newUser, "manager", userFields);
+                    SetProperty(newUser, "Description", userFields);
+                    SetProperty(newUser, "Office", userFields);
+                    SetProperty(newUser, "TelephoneNumber", userFields);
+                    SetProperty(newUser, "Street", userFields);
+                    SetProperty(newUser, "City", userFields);
+                    SetProperty(newUser, "State", userFields);
+                    SetProperty(newUser, "PostalCode", userFields);
+                    SetProperty(newUser, "Mobile", userFields);
+                    SetProperty(newUser, "JobTitle", userFields);
+                    SetProperty(newUser, "Department", userFields);
+                    SetProperty(newUser, "Company", userFields);
+                    // SetProperty(newUser, "ManagerName", userFields);
 
                     newUser.CommitChanges();
 
@@ -76,8 +76,27 @@ namespace ADHelper.Utility {
         // // Commit the changes to the directory
         // directoryEntry.CommitChanges();
 
-        private void SetProperty(DirectoryEntry entry, string propertyName, Dictionary<string, string> userFields) {
-            entry.Properties[propertyName].Value = userFields.ContainsKey(propertyName) && !string.IsNullOrEmpty(userFields[propertyName]) ? userFields[propertyName] : null;
+        private static readonly Dictionary<string, string> ADPropertyMap = new Dictionary<string, string> {
+            { "Description", "description" },
+            { "Office", "physicalDeliveryOfficeName" },
+            { "TelephoneNumber", "telephoneNumber" },
+            { "Street", "streetAddress" },
+            { "City", "l" },
+            { "State", "st" },
+            { "PostalCode", "postalCode" },
+            { "Mobile", "mobile" },
+            { "JobTitle", "title" },
+            { "Department", "department" },
+            { "Company", "company" },
+            { "ManagerName", "manager" },
+            { "HomeDirectory", "homeDirectory" }
+        };
+
+        private void SetProperty(DirectoryEntry entry, string patternKey, Dictionary<string, string> userFields) {
+            string adPropertyName = ADPropertyMap[patternKey];
+            if (userFields.ContainsKey(patternKey) && !string.IsNullOrEmpty(userFields[patternKey])) {
+                entry.Properties[adPropertyName].Value = userFields[patternKey];
+            }
         }
 
         public void SetPassword(string samAccountName, string password) {
