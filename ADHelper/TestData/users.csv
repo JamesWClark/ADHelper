@@ -1,5 +1,5 @@
 ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,DN,Phone,Street,City,State,Zip,Title,Dept,Company,HomeDrive,HomeDirectory,Manager,Script
-12,John,Doe,johndoe@example.com,johndoe,Password123,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",123-456-7890,123 Way,Wash,CO,80907,Savant,Dark Arts,Hogwarts,H:,\\DC1\Test\%username%,jwclark,"Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe"
+12,John,Doe,johndoe@example.com,johndoe,Password456,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",123-456-7890,123 Way,Wash,CO,80907,Savant,Dark Arts,Hogwarts,H:,\\DC1\Test\%username%,jwclark,"Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe"
 13,Jane,Smith,janesmith@example.com,janesmith,Password456,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,H:,\\DC1\Test\%username%
 14,Michael,Brown,michaelbrown@example.com,michaelbrown,Password789
 15,Emily,Davis,emilydavis@example.com,emilydavis,Password101,,,,,,,,,,,,,,jwclark

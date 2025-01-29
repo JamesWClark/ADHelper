@@ -9,7 +9,7 @@ using ADHelper.Utility;
 using ADHelper.Config;
 
 namespace ADHelper.Tasks {
-    [Obsolete("This is not a well developed class.")]
+
     class Task_BatchSetPasswords {
 
         private List<string> badSamAccountNames = new List<string>();

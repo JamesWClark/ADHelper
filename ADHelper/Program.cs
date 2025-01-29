@@ -63,8 +63,20 @@ namespace ADHelper {
                 Console.WriteLine($"Input File: {opts.CsvPath}");
                 Console.WriteLine($"- has headers: {opts.InDataHeaders}");
                 Console.WriteLine($"Output Directory: {outputDirectory}");
-                Tasks.Task_BatchCreateUsers task = new Tasks.Task_BatchCreateUsers(opts, outputDirectory);
-                task.Run();
+
+                switch (opts.Task.ToLower()) {
+                    case "create_users":
+                        Tasks.Task_BatchCreateUsers createUserTask = new Tasks.Task_BatchCreateUsers(opts, outputDirectory);
+                        createUserTask.Run();
+                        break;
+                    case "set_passwords":
+                        Tasks.Task_BatchSetPasswords setPasswordTask = new Tasks.Task_BatchSetPasswords(opts, outputDirectory);
+                        setPasswordTask.Run();
+                        break;
+                    default:
+                        Console.WriteLine($"Unsupported Task: {opts.Task}");
+                        break;
+                }
             }
         }
     }

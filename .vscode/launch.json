@@ -10,7 +10,7 @@
             "args": [
                 "-csv", "${workspaceFolder}/ADHelper/TestData/users.csv",
                 "-xml", "${workspaceFolder}/ADHelper/TestData/config.xml",
-                "-task", "create_users"
+                "-task", "set_passwords"
             ],
             "cwd": "${workspaceFolder}/ADHelper",
             "console": "internalConsole",

@@ -14,9 +14,6 @@ namespace ADHelper.Config {
         private bool inDataHeaders = true;
         private bool generatePasswords = false;
         private bool alphatize = false;
-        // alphatize string - see Task_Batch.cs
-        // string mapDirty = "ŠŽšžŸÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðñòóôõöùúûüýÿ";
-        // string mapClean = "SZszYAAAAAACEEEEIIIIDNOOOOOUUUUYaaaaaaceeeeiiiidnooooouuuuyy";
 
         public Options(string[] args) {
             for(int i = 0; i < args.Length; i += 2) {
@@ -59,20 +56,11 @@ namespace ADHelper.Config {
             distinguishedName   = tryReadNode(doc, "/configuration/distinguishedName");
             inDataHeaders       = Convert.ToBoolean(tryReadNode(doc, "/configuration/csv/headers"));
             generatePasswords   = Convert.ToBoolean(tryReadNode(doc, "/configuration/password/generator"));
-            // alphatize           = Convert.ToBoolean(tryReadNode(doc, "/configuration/username/alphatize"));
         }
 
         private string tryReadNode(XmlDocument doc, string nodePath) {
-            string innerText;
-            try {
-                innerText = doc.DocumentElement.SelectSingleNode(nodePath).InnerText; 
-            } catch (NullReferenceException) {
-                Console.WriteLine($"Bad XML path: {nodePath}");
-                Console.WriteLine("See for example: ");
-                Console.WriteLine("https://raw.githubusercontent.com/JamesWClark/ADHelper/main/Release/config.xml");
-                throw new ArgumentException();
-            }
-            return innerText;
+            XmlNode node = doc.SelectSingleNode(nodePath);
+            return node?.InnerText ?? string.Empty;
         }
 
         public string Username {
