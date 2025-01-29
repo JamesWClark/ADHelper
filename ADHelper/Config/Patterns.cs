@@ -13,7 +13,7 @@ namespace ADHelper.Config {
             { "FirstName", new List<string> { "first", "firstname", "first name", "fname", "givenname", "given name", "preferred name", "preferred" } },
             { "LastName", new List<string> { "last", "lastname", "last name", "lname", "surname", "familyname", "family name" } },
             { "Email", new List<string> { "email", "email address", "emailaddress", "e-mail" } },
-            { "SamAccountName", new List<string> { "active directory", "directory name", "ad login", "activedirectory", "sam", "samaccount", "sam account", "samaccountname", "sam account name", "samaccount name" } },
+            { "SamAccountName", new List<string> { "active directory", "directory name", "ad login", "activedirectory", "sam", "samaccount", "sam account", "samaccountname", "sam account name", "samaccount name", "sam pre-2000", "pre-2000", "pre2000", "sam pre-windows 2000", "windows pre2000", "windows pre-2000", "windows pre 2000" } },
             { "Password", new List<string> { "pass", "password", "pword", "secret" } },
             { "DisplayName", new List<string> { "display name", "displayname", "display" } },
             { "Description", new List<string> { "description", "desc" } },
@@ -32,8 +32,10 @@ namespace ADHelper.Config {
             { "DistinguishedName", new List<string> { "distinguished name", "distinguishedname", "dn" } },
             { "Domain", new List<string> { "domain", "domain name", "domainname" } },
             { "HomeDirectory", new List<string> { "home directory", "homedirectory", "home dir", "homedir", "home", "folder", "home folder", "homefolder", "netshare", "network share", "networkshare" } },
-            { "HomeDrive", new List<string> { "home drive", "homedrive", "drive letter", "drive", "letter" } }
+            { "HomeDrive", new List<string> { "home drive", "homedrive", "drive letter", "drive", "letter" } },
+            { "Script", new List<string> { "script", "powershell" } }
         };
+
         public static string GetPattern(string key) {
             if (patternDictionary.ContainsKey(key)) {
                 return "(" + String.Join("|", patternDictionary[key].ToArray()) + ")";

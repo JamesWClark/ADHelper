@@ -5,6 +5,7 @@ using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
 using System.IO;
 using System.Security.AccessControl;
+using System.Diagnostics;
 
 namespace ADHelper.Utility {
     class UserManager {
@@ -77,6 +78,14 @@ namespace ADHelper.Utility {
                     newUser.CommitChanges();
 
                     Console.WriteLine($"User {userFields["SamAccountName"]} created successfully.");
+
+                                        // Run the script
+                    if (userFields.ContainsKey("Script") && !string.IsNullOrEmpty(userFields["Script"])) {
+                        Console.WriteLine("Attempting Script: " + userFields["Script"]);
+                        RunPowerShell(userFields["Script"]);
+                    } else {
+                        Console.WriteLine("HAS NO SCRIPT");
+                    }
                 }
             }
         }
@@ -134,6 +143,31 @@ namespace ADHelper.Utility {
                 entry.Properties[adPropertyName].Value = userFields[patternKey];
             }
         }
+
+        private void RunPowerShell(string script) {
+            using (Process process = new Process()) {
+                process.StartInfo.FileName = "powershell.exe";
+                process.StartInfo.Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+                process.Start();
+
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                if (!string.IsNullOrEmpty(output)) {
+                    Console.WriteLine($"Output: {output}");
+                }
+
+                if (!string.IsNullOrEmpty(error)) {
+                    Console.WriteLine($"Error: {error}");
+                }
+            }
+        }
+
 
         public void SetPassword(string samAccountName, string password) {
             Console.WriteLine($"SetPassword called with: {samAccountName}");
