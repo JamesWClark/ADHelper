@@ -6,13 +6,13 @@ using ADHelper.Utility;
 using ADHelper.Config;
 
 namespace ADHelper.Tasks {
-    class Task_Batch {
+    class Task_BatchCreateUsers {
 
         private List<string> badSamAccountNames = new List<string>();
         private Config.Options opts;
         private string _outputDirectory;
 
-        public Task_Batch(Config.Options options, string outputDirectory) {
+        public Task_BatchCreateUsers(Config.Options options, string outputDirectory) {
             opts = options;
             _outputDirectory = outputDirectory;
         }
@@ -82,18 +82,6 @@ namespace ADHelper.Tasks {
                                     }
                                     tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                                     Console.WriteLine("created: " + userFields["Email"]);
-                                }
-                                break;
-                            case "set_passwords":
-                                Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
-                                userManager.SetPassword(userFields["SamAccountName"], userFields["Password"]);
-                                using (var tw = new StreamWriter(success_file_path, true)) {
-                                    if (!successHeadersWritten) {
-                                        tw.WriteLine("First Name,Last Name,Email,AD Login,Password");
-                                        successHeadersWritten = true;
-                                    }
-                                    tw.WriteLine($"{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
-                                    Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                                 }
                                 break;
                             default:

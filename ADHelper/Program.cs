@@ -63,7 +63,7 @@ namespace ADHelper {
                 Console.WriteLine($"Input File: {opts.CsvPath}");
                 Console.WriteLine($"- has headers: {opts.InDataHeaders}");
                 Console.WriteLine($"Output Directory: {outputDirectory}");
-                Tasks.Task_Batch task = new Tasks.Task_Batch(opts, outputDirectory);
+                Tasks.Task_BatchCreateUsers task = new Tasks.Task_BatchCreateUsers(opts, outputDirectory);
                 task.Run();
             }
         }

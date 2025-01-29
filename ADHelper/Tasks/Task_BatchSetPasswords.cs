@@ -5,77 +5,107 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Text.RegularExpressions;
+using ADHelper.Utility;
+using ADHelper.Config;
 
 namespace ADHelper.Tasks {
-	[Obsolete("This is not a well developed class.")]
-	class Task_BatchSetPasswords {
+    [Obsolete("This is not a well developed class.")]
+    class Task_BatchSetPasswords {
 
-		bool hasHeaders = true;
-		string pathToUserCsv;
-		private List<string> badSamAccountNames = new List<string>();
-		private Config.Options opts;
+        private List<string> badSamAccountNames = new List<string>();
+        private Config.Options opts;
+        private string _outputDirectory;
 
-		public Task_BatchSetPasswords(Config.Options options) {
-			this.pathToUserCsv = options.CsvPath;
-			opts = options;
-		}
+        public Task_BatchSetPasswords(Config.Options options, string outputDirectory) {
+            opts = options;
+            _outputDirectory = outputDirectory;
+        }
 
-		public void Run() {
-			try {
-				//open a users csv and start reading it
-				StreamReader reader = new StreamReader(pathToUserCsv, true);
+        public void Run() {
+            Console.WriteLine("Task_BatchSetPasswords Run method called");
 
-				//if headers, burn the first line
-				if (hasHeaders) {
-					reader.ReadLine();
-				}
-				//read the rest of the file
-				int count = 0;
-				string line;
-				while ((line = reader.ReadLine()) != null) {
-					count++;
-					//foreach user in file
-					string[] columns = line.Split(',');
+            try {
+                var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
+                Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
+                Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
 
-					//try without removing punctuation
-					string fname = columns[1];
-					string lname = columns[3];
-					string samAccountName = columns[6];
-					string email = columns[5];
-					string password = columns[8];
+                var headerMap = MapHeadersToKeys(headers);
+                var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
 
-					// save the domain
-					//string domain = email.Split('@')[1];
+                string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
+                string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
 
-					// cleaning with regex
-					string domain = email.Split('@')[1];
-					string pattern = "[^-ñA-Za-z0-9]";
-					samAccountName = Regex.Replace(samAccountName, pattern, "");
-					fname = Regex.Replace(fname, pattern, "");
-					lname = Regex.Replace(lname, pattern, "");
+                bool successHeadersWritten = false;
+                bool failHeadersWritten = false;
 
-					try {
-						using (var context = new PrincipalContext(ContextType.Domain, opts.Domain, opts.DistinguishedName)) {
-                            // only if setting passwords but not creating accounts
-                            using (var user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samAccountName)) {
-								user.SetPassword(password);
-							}
-						}
-						Console.WriteLine("ok: " + email);
-					} catch (Exception ex) {
-						Console.WriteLine("ex when email = " + email);
-						Console.WriteLine(ex.Message);
+                int count = 0;
+                foreach (var columns in lines) {
+                    var userFields = new Dictionary<string, string>();
+                    foreach (var header in headerIndices.Keys) {
+                        if (headerIndices[header] < columns.Length) {
+                            var key = headerMap.ContainsKey(header) ? headerMap[header] : header;
+                            userFields[key] = columns[headerIndices[header]].Trim();
+                        } else {
+                            var key = headerMap.ContainsKey(header) ? headerMap[header] : header;
+                            userFields[key] = null; // or an appropriate default value
+                        }
+                    }
 
-						badSamAccountNames.Add(samAccountName);
-					}
-				}
-			} catch (IOException e) {
-				Console.WriteLine(e.Message);
-			}
-			Console.WriteLine("\n\nfails:");
-			foreach (string s in badSamAccountNames) {
-				Console.WriteLine(s);
-			}
-		}
-	}
+                    // Check for Domain and DistinguishedName in the CSV
+                    string domain = userFields.ContainsKey("Domain") && !string.IsNullOrEmpty(userFields["Domain"]) ? userFields["Domain"] : opts.Domain;
+                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
+
+                    var userManager = new UserManager(domain, distinguishedName);
+                    Console.WriteLine();
+                    Console.WriteLine($"-- UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
+
+                    try {
+                        Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
+                        userManager.SetPassword(userFields["SamAccountName"], userFields["Password"]);
+                        using (var tw = new StreamWriter(success_file_path, true)) {
+                            if (!successHeadersWritten) {
+                                tw.WriteLine("First Name,Last Name,Email,AD Login,Password");
+                                successHeadersWritten = true;
+                            }
+                            tw.WriteLine($"{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                            Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                        }
+                    } catch (Exception ex) {
+                        Console.WriteLine("failed: " + userFields["Email"]);
+                        Console.WriteLine(ex.Message);
+                        using (var tw = new StreamWriter(fail_file_path, true)) {
+                            if (!failHeadersWritten) {
+                                tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
+                                failHeadersWritten = true;
+                            }
+                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
+                        }
+                        badSamAccountNames.Add(userFields["SamAccountName"]);
+                    }
+                    count++;
+                }
+            } catch (IOException e) {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine("\n\nfails:");
+            foreach (string s in badSamAccountNames) {
+                Console.WriteLine(s);
+            }
+            Console.WriteLine();
+        }
+
+        private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
+            var headerMap = new Dictionary<string, string>();
+            foreach (var key in Patterns.GetKeys()) {
+                var pattern = Patterns.GetPattern(key);
+                foreach (var header in headers) {
+                    if (Regex.IsMatch(header.ToLower(), pattern)) {
+                        headerMap[header] = key;
+                        break;
+                    }
+                }
+            }
+            return headerMap;
+        }
+    }
 }
