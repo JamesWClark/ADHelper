@@ -17,7 +17,7 @@ namespace ADHelper {
 
         // ADHelper.exe -csv test.csv -config config.xml -task create_users
         // ADHelper.exe -csv test.csv -config config.xml -task set_passwords
-
+        // ADHelper.exe -csv test.csv -config config.xml -task generate_passwords
 
         // test data https://docs.google.com/spreadsheets/d/1WjtfjSwoOvFsAnMVRwAyEEczGB7-vM4-ZYbqup4Nv2I/edit#gid=0
 
@@ -29,12 +29,13 @@ namespace ADHelper {
                 Console.WriteLine("Provide command line arguments, for example: ");
                 Console.WriteLine("1) ADHelper.exe -csv users.csv -config config.xml -task create_users");
                 Console.WriteLine("2) ADHelper.exe -csv users.csv -config config.xml -task set_passwords");
+                Console.WriteLine("3) ADHelper.exe -csv users.csv -config config.xml -task generate_passwords");
                 Console.ReadLine();
                 return;
             }
             if(opts.Task.Length == 0) {
                 Console.WriteLine("Task needed.");
-                Console.WriteLine("-task create_user or set_password");
+                Console.WriteLine("-task create_user, set_password, or generate_passwords");
                 return;
             }
 
@@ -72,6 +73,10 @@ namespace ADHelper {
                     case "set_passwords":
                         Tasks.Task_BatchSetPasswords setPasswordTask = new Tasks.Task_BatchSetPasswords(opts, outputDirectory);
                         setPasswordTask.Run();
+                        break;
+                    case "generate_passwords":
+                        Tasks.Task_GeneratePasswords generatePasswordsTask = new Tasks.Task_GeneratePasswords(opts, outputDirectory);
+                        generatePasswordsTask.Run();
                         break;
                     default:
                         Console.WriteLine($"Unsupported Task: {opts.Task}");

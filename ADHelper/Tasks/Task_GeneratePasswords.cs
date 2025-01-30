@@ -1,98 +1,119 @@
 ﻿using System;
-using System.Configuration;
-using System.DirectoryServices;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using ADHelper.ADClasses;
+using System.Text.RegularExpressions;
+using ADHelper.Utility;
+using ADHelper.Config;
 
 namespace ADHelper.Tasks {
-	[Obsolete("This is not a well developed class.")]
-	class Task_GeneratePasswords {
+    class Task_GeneratePasswords {
 
-		private int length;
-		private string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345678901234567890123456789";
-		private AD_UsersCollection users;
-		private StreamWriter writer;
-		private string uniformPassword = String.Empty;
+        private List<string> badSamAccountNames = new List<string>();
+        private Config.Options opts;
+        private string _outputDirectory;
+        private string uniformPassword = String.Empty;
 
-		public Task_GeneratePasswords(ADClasses.AD_UsersCollection users) {
-			this.users = users;
-		}
+        public Task_GeneratePasswords(Config.Options options, string outputDirectory) {
+            opts = options;
+            _outputDirectory = outputDirectory;
+        }
 
-		public Task_GeneratePasswords(ADClasses.AD_UsersCollection users, int length) {
-			this.length = length;
-			this.users = users;
-		}
-		/// <summary>
-		/// Sets a uniform password on all AD distinguishedName properties passed in users collection.
-		/// </summary>
-		/// <example>
-		/// //the 8 is erroneous. sets all passwords to @school1
-		/// Tasks.Task_GeneratePasswords task = new Tasks.Task_GeneratePasswords(users, 8, "@school1");</example>
-		/// <param name="users"></param>
-		/// <param name="length"></param>
-		/// <param name="password"></param>
-		public Task_GeneratePasswords(ADClasses.AD_UsersCollection users, int length, string password) {
-			this.length = length;
-			this.users = users;
-			this.uniformPassword = password;
-		}
-		/// <summary>
-		/// invokes a SetPassword for each user in ad_userscollection object
-		/// output: user_passwords.csv in bin folder
-		/// </summary>
-		public void Run() {
+        public Task_GeneratePasswords(Config.Options options, string outputDirectory, string password) {
+            opts = options;
+            _outputDirectory = outputDirectory;
+            this.uniformPassword = password;
+        }
 
-			//will throw null if called after the first constructor
+        public void Run() {
+            Console.WriteLine("Task_GeneratePasswords Run method called");
 
-			writer = new StreamWriter("user_passwords.csv", true);
-			foreach (DirectoryEntry user in users.Users) {
-				Console.WriteLine(user.Path);
-				string newPassword;
-				if(uniformPassword == String.Empty) { // a uniform password was not provided
-					newPassword = GenerateSinglePassword(length);
-				} else {
-					newPassword = uniformPassword;
-				}
-				user.Invoke("SetPassword", new object[] { newPassword });
-				writer.WriteLine(user.Path + "," + newPassword);
-			}
-			foreach (string name in users.BadSamAccountNames) {
-				Console.WriteLine(name);
-			}
-			writer.Close();
-		}
+            try {
+                var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
+                Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
+                Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
 
-		/// <summary>
-		/// generates random character sequence where index 1 is upper, 2 is lower, 3 is numeric
-		/// </summary>
-		/// <param name="length"></param>
-		/// <returns></returns>
-		private string GenerateSinglePassword(int length) {
-			StringBuilder builder = new StringBuilder();
-			Random random = new Random();
-			//rule: there must be one lower, one upper, and one number
-			//upper: always capitalize first character = between index of A and Z
-			builder.Append(chars[random.Next(chars.IndexOf('A'), chars.IndexOf('Z'))]);
-			//lower: always lowercase second character = between index of a and z
-			builder.Append(chars[random.Next(chars.IndexOf('a'), chars.IndexOf('z'))]);
-			//numeric: always use number third character = between index of Z+1 and chars.length
-			builder.Append(chars[random.Next(chars.IndexOf('Z') + 1, chars.Length - 1)]);
-			//the rest can be any random
-			for (int i = 3; i < length; i++) {
-				builder.Append(chars[random.Next(0, chars.Length)]);
-			}
-			return builder.ToString();
-		}
-		//hard coded way to call a password change based on user provided password.
-		//hard-coded to set as "old" and "new"
-		private static void ChangePW(DirectoryEntry entry) {
-			try {
-				// Change the password.
-				entry.Invoke("ChangePassword", new object[] { "old", "new" });
-			} catch (Exception excep) {
-				Console.WriteLine("Error changing password. Reason: " + excep.Message + "\n" + excep.InnerException);
-			}
-		}
-	}
+                var headerMap = MapHeadersToKeys(headers);
+                var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
+
+                string output_file_path = Path.Combine(_outputDirectory, $"generated_passwords.{DateTime.Now.ToFileTime()}.csv");
+
+                bool headersWritten = false;
+
+                int count = 0;
+                foreach (var columns in lines) {
+                    var userFields = new Dictionary<string, string>();
+                    foreach (var header in headerIndices.Keys) {
+                        if (headerIndices[header] < columns.Length) {
+                            var key = headerMap.ContainsKey(header) ? headerMap[header] : header;
+                            userFields[key] = columns[headerIndices[header]].Trim();
+                        } else {
+                            var key = headerMap.ContainsKey(header) ? headerMap[header] : header;
+                            userFields[key] = null; // or an appropriate default value
+                        }
+                    }
+
+                    string newPassword;
+                    if (uniformPassword == String.Empty) {
+                        newPassword = PasswordGenerator.WordList5Password(2); // Generate two 5-letter words and two numbers
+                    } else {
+                        newPassword = uniformPassword;
+                    }
+
+                    using (var tw = new StreamWriter(output_file_path, true)) {
+                        if (!headersWritten) {
+                            var outputHeaders = new List<string>(headers);
+                            if (headers.Contains("Password")) {
+                                outputHeaders.Remove("Password");
+                                outputHeaders.Add("OldPassword");
+                            }
+                            outputHeaders.Add("NewPassword");
+                            tw.WriteLine(string.Join(",", outputHeaders));
+                            headersWritten = true;
+                        }
+
+                        var outputColumns = new List<string>();
+                        foreach (var header in headers) {
+                            if (userFields.ContainsKey(header)) {
+                                var value = userFields[header];
+                                outputColumns.Add(value != null && value.Contains(",") ? $"\"{value}\"" : value);
+                            } else {
+                                outputColumns.Add(""); // Add empty value for missing columns
+                            }
+                        }
+                        if (headers.Contains("Password")) {
+                            outputColumns.Add(userFields["Password"]);
+                        }
+                        outputColumns.Add(newPassword);
+
+                        tw.WriteLine(string.Join(",", outputColumns));
+                    }
+
+                    count++;
+                }
+            } catch (IOException e) {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine("\n\nfails:");
+            foreach (string s in badSamAccountNames) {
+                Console.WriteLine(s);
+            }
+            Console.WriteLine();
+        }
+
+        private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
+            var headerMap = new Dictionary<string, string>();
+            foreach (var key in Patterns.GetKeys()) {
+                var pattern = Patterns.GetPattern(key);
+                foreach (var header in headers) {
+                    if (Regex.IsMatch(header.ToLower(), pattern)) {
+                        headerMap[header] = key;
+                        break;
+                    }
+                }
+            }
+            return headerMap;
+        }
+    }
 }
