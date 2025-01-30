@@ -1,7 +1,7 @@
-ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,DN,Phone,Street,City,State,Zip,Title,Dept,Company,HomeDrive,HomeDirectory,Manager,Script,PwdResetRequired
-12,John,Doe,johndoe@example.com,johndoe,Password456,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",123-456-7890,123 Way,Wash,CO,80907,Savant,Dark Arts,Hogwarts,H:,\\DC1\Test\%username%,jwclark,"Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe",true
-13,Jane,Smith,janesmith@example.com,janesmith,Password456,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,H:,\\DC1\Test\%username%,,false
-14,Michael,Brown,michaelbrown@example.com,michaelbrown,Password789
-15,Emily,Davis,emilydavis@example.com,emilydavis,Password101,,,,,,,,,,,,,,jwclark
-16,David,Wilson,davidwilson@example.com,davidwilson,Password202
-17,Emma,Johnson,emmajohnson@example.com,emmajohnson,Password303,Newb,Cartwright,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,,\\DC1\Test\%username%,,,true
+ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,DN,Telephone,Mobile,Street,City,State,Zip,Title,Dept,Company,HomeDrive,HomeDirectory,Manager,Script,PwdResetRequired
+12,John,Doe,johndoe@example.com,johndoe,Password456,Teacher,Lowell,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",456-777-5555,123-456-7890,123 Way,Wash,CO,80907,Savant,Dark Arts,Hogwarts,H:,\\DC1\Test\%username%,jwclark,"Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe",true
+13,Jane,Smith,janesmith@example.com,janesmith,Password123,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,,H:,\\DC1\Test\%username%,,,false
+14,Michael,Brown,michaelbrown@example.com,michaelbrown,Password123,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local"
+15,Emily,Davis,emilydavis@example.com,emilydavis,Password123,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,,,,jwclark
+16,David,Wilson,davidwilson@example.com,davidwilson,Password123,,,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local"
+17,Emma,Johnson,emmajohnson@example.com,emmajohnson,Password123,Newb,Cartwright,"OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local",,,,,,,,,,H:,\\DC1\Test\%username%,,Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe,true

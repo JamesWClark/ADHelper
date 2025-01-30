@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ADHelper.Utility;
 using ADHelper.Config;
+using System.DirectoryServices.AccountManagement;
 
 namespace ADHelper.Tasks {
     class Task_GeneratePasswords {
@@ -59,6 +60,26 @@ namespace ADHelper.Tasks {
                         newPassword = PasswordGenerator.WordList5Password(2); // Generate two 5-letter words and two numbers
                     } else {
                         newPassword = uniformPassword;
+                    }
+
+                    // Set the new password in Active Directory
+                    try {
+                        using (var context = new PrincipalContext(ContextType.Domain, opts.Domain)) {
+                            using (var user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userFields["SamAccountName"])) {
+                                if (user != null) {
+                                    user.SetPassword(newPassword);
+                                    user.Save();
+                                    Console.WriteLine($"Password set for user: {userFields["SamAccountName"]}");
+                                } else {
+                                    throw new Exception($"User not found: {userFields["SamAccountName"]}");
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+                        Console.WriteLine($"Failed to set password for user: {userFields["SamAccountName"]}");
+                        Console.WriteLine(ex.Message);
+                        badSamAccountNames.Add(userFields["SamAccountName"]);
+                        continue;
                     }
 
                     using (var tw = new StreamWriter(output_file_path, true)) {

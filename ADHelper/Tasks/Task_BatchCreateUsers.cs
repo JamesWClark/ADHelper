@@ -63,7 +63,7 @@ namespace ADHelper.Tasks {
 
                     // Check for Domain and DistinguishedName in the CSV
                     string domain = userFields.ContainsKey("Domain") && !string.IsNullOrEmpty(userFields["Domain"]) ? userFields["Domain"] : opts.Domain;
-                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
+                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : "OU=Default,DC=domain,DC=com";
 
                     var userManager = new UserManager(domain, distinguishedName);
                     Console.WriteLine();

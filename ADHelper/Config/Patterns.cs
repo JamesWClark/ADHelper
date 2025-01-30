@@ -14,7 +14,7 @@ namespace ADHelper.Config {
             { "LastName", new List<string> { "last", "lastname", "last name", "lname", "surname", "familyname", "family name" } },
             { "Email", new List<string> { "email", "email address", "emailaddress", "e-mail" } },
             { "SamAccountName", new List<string> { "active directory", "directory name", "ad login", "activedirectory", "sam", "samaccount", "sam account", "samaccountname", "sam account name", "samaccount name", "sam pre-2000", "pre-2000", "pre2000", "sam pre-windows 2000", "windows pre2000", "windows pre-2000", "windows pre 2000" } },
-            { "Password", new List<string> { "pass", "password", "pword", "secret" } },
+            { "Password", new List<string> { "pass", "password", "pword", "secret", "new password", "newpassword" } },
             { "DisplayName", new List<string> { "display name", "displayname", "display" } },
             { "Description", new List<string> { "description", "desc" } },
             { "Office", new List<string> { "office", "office location", "office name", "office location name" } },

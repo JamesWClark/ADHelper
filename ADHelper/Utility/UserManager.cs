@@ -137,7 +137,8 @@ namespace ADHelper.Utility {
             { "Company", "company" },
             { "ManagerName", "manager" },
             { "HomeDirectory", "homeDirectory" },
-            { "HomeDrive", "homeDrive" }
+            { "HomeDrive", "homeDrive" },
+            { "PwdResetRequired", "pwdLastReset" }
         };
 
         private void SetProperty(DirectoryEntry entry, string patternKey, Dictionary<string, string> userFields) {

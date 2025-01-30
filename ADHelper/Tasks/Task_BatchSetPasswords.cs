@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using ADHelper.Utility;
 using ADHelper.Config;
+using System.DirectoryServices.AccountManagement;
 
 namespace ADHelper.Tasks {
 
@@ -51,7 +52,7 @@ namespace ADHelper.Tasks {
 
                     // Check for Domain and DistinguishedName in the CSV
                     string domain = userFields.ContainsKey("Domain") && !string.IsNullOrEmpty(userFields["Domain"]) ? userFields["Domain"] : opts.Domain;
-                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : opts.DistinguishedName;
+                    string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : "OU=Default,DC=domain,DC=com";
 
                     var userManager = new UserManager(domain, distinguishedName);
                     Console.WriteLine();
@@ -63,7 +64,18 @@ namespace ADHelper.Tasks {
                         }
 
                         Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
-                        userManager.SetPassword(userFields["SamAccountName"], userFields["Password"]);
+                        using (var context = new PrincipalContext(ContextType.Domain, domain)) {
+                            using (var user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userFields["SamAccountName"])) {
+                                if (user != null) {
+                                    user.SetPassword(userFields["Password"]);
+                                    user.Save();
+                                    Console.WriteLine($"Password set for user: {userFields["SamAccountName"]}");
+                                } else {
+                                    throw new Exception($"User not found: {userFields["SamAccountName"]}");
+                                }
+                            }
+                        }
+
                         using (var tw = new StreamWriter(success_file_path, true)) {
                             if (!successHeadersWritten) {
                                 tw.WriteLine(string.Join(",", headers));
