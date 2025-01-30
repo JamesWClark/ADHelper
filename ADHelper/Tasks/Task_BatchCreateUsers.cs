@@ -20,9 +20,9 @@ namespace ADHelper.Tasks {
         private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
             var headerMap = new Dictionary<string, string>();
             foreach (var key in Patterns.GetKeys()) {
-                var pattern = Patterns.GetPattern(key);
+                var patterns = Patterns.GetPatterns(key);
                 foreach (var header in headers) {
-                    if (Regex.IsMatch(header.ToLower(), pattern)) {
+                    if (patterns.Contains(header.ToLower())) {
                         headerMap[header] = key;
                         break;
                     }

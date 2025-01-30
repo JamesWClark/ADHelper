@@ -44,6 +44,13 @@ namespace ADHelper.Config {
             throw new ArgumentException($"Pattern for key '{key}' not found.");
         }
 
+        public static List<string> GetPatterns(string key) {
+            if (patternDictionary.ContainsKey(key)) {
+                return patternDictionary[key];
+            }
+            throw new ArgumentException($"Patterns for key '{key}' not found.");
+        }
+
         public static IEnumerable<string> GetKeys() {
             return patternDictionary.Keys;
         }
