@@ -24,7 +24,7 @@ namespace ADHelper.Config {
             { "State", new List<string> { "state", "province", "state/province", "stateprovince" } },
             { "PostalCode", new List<string> { "postal code", "postalcode", "zip", "zip code", "zipcode" } },
             { "Country", new List<string> { "country", "nation", "country name", "countryname" } },
-            { "Mobile", new List<string> { "mobile", "mobile phone", "mobilephone", "cell", "cell phone", "cellphone" } },
+            { "Mobile", new List<string> { "mobile", "mobile phone", "mobilephone", "cell", "cell phone", "cellphone", "cellular" } },
             { "JobTitle", new List<string> { "job title", "jobtitle", "title", "position" } },
             { "Department", new List<string> { "department", "dept" } },
             { "Company", new List<string> { "company", "organization", "org" } },
