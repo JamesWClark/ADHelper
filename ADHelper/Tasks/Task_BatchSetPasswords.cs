@@ -1,8 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Configuration;
-using System.DirectoryServices;
-using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Text.RegularExpressions;
 using ADHelper.Utility;
@@ -60,14 +58,18 @@ namespace ADHelper.Tasks {
                     Console.WriteLine($"-- UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
 
                     try {
+                        if (string.IsNullOrEmpty(userFields["Password"])) {
+                            throw new Exception("Password field is missing");
+                        }
+
                         Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
                         userManager.SetPassword(userFields["SamAccountName"], userFields["Password"]);
                         using (var tw = new StreamWriter(success_file_path, true)) {
                             if (!successHeadersWritten) {
-                                tw.WriteLine("First Name,Last Name,Email,AD Login,Password");
+                                tw.WriteLine(string.Join(",", headers));
                                 successHeadersWritten = true;
                             }
-                            tw.WriteLine($"{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                            tw.WriteLine(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)));
                             Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                         }
                     } catch (Exception ex) {
@@ -75,10 +77,10 @@ namespace ADHelper.Tasks {
                         Console.WriteLine(ex.Message);
                         using (var tw = new StreamWriter(fail_file_path, true)) {
                             if (!failHeadersWritten) {
-                                tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
+                                tw.WriteLine(string.Join(",", headers) + ",Error Message");
                                 failHeadersWritten = true;
                             }
-                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
+                            tw.WriteLine(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)) + $",\"{ex.Message.Trim()}\"");
                         }
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                     }
