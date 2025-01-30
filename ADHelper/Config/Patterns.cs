@@ -33,7 +33,8 @@ namespace ADHelper.Config {
             { "Domain", new List<string> { "domain", "domain name", "domainname" } },
             { "HomeDirectory", new List<string> { "home directory", "homedirectory", "home dir", "homedir", "home", "folder", "home folder", "homefolder", "netshare", "network share", "networkshare" } },
             { "HomeDrive", new List<string> { "home drive", "homedrive", "drive letter", "drive", "letter" } },
-            { "Script", new List<string> { "script", "powershell" } }
+            { "Script", new List<string> { "script", "powershell" } },
+            { "PwdResetRequired", new List<string> { "pwdresetrequired", "password reset required", "reset password", "resetpassword" } }
         };
 
         public static string GetPattern(string key) {
