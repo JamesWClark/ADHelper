@@ -2,25 +2,16 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using ADHelper.Utility;
 using ADHelper.Config;
 using System.DirectoryServices.AccountManagement;
 
 namespace ADHelper.Tasks {
+    class Task_BatchSetPasswords : TaskBase {
 
-    class Task_BatchSetPasswords {
+        public Task_BatchSetPasswords(Config.Options options, string outputDirectory) : base(options, outputDirectory) { }
 
-        private List<string> badSamAccountNames = new List<string>();
-        private Config.Options opts;
-        private string _outputDirectory;
-
-        public Task_BatchSetPasswords(Config.Options options, string outputDirectory) {
-            opts = options;
-            _outputDirectory = outputDirectory;
-        }
-
-        public void Run() {
+        public override void Run() {
             Console.WriteLine("Task_BatchSetPasswords Run method called");
 
             try {
@@ -30,12 +21,6 @@ namespace ADHelper.Tasks {
 
                 var headerMap = MapHeadersToKeys(headers);
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
-
-                string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
-                string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
-
-                bool successHeadersWritten = false;
-                bool failHeadersWritten = false;
 
                 int count = 0;
                 foreach (var columns in lines) {
@@ -76,24 +61,20 @@ namespace ADHelper.Tasks {
                             }
                         }
 
-                        using (var tw = new StreamWriter(success_file_path, true)) {
-                            if (!successHeadersWritten) {
-                                tw.WriteLine(string.Join(",", headers));
-                                successHeadersWritten = true;
-                            }
-                            tw.WriteLine(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)));
-                            Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                        if (!successHeadersWritten) {
+                            LogSuccess(string.Join(",", headers));
+                            successHeadersWritten = true;
                         }
+                        LogSuccess(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)));
+                        Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                     } catch (Exception ex) {
                         Console.WriteLine("failed: " + userFields["Email"]);
                         Console.WriteLine(ex.Message);
-                        using (var tw = new StreamWriter(fail_file_path, true)) {
-                            if (!failHeadersWritten) {
-                                tw.WriteLine(string.Join(",", headers) + ",Error Message");
-                                failHeadersWritten = true;
-                            }
-                            tw.WriteLine(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)) + $",\"{ex.Message.Trim()}\"");
+                        if (!failHeadersWritten) {
+                            LogFailure(string.Join(",", headers) + ",Error Message");
+                            failHeadersWritten = true;
                         }
+                        LogFailure(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)) + $",\"{ex.Message.Trim()}\"");
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                     }
                     count++;
@@ -106,20 +87,6 @@ namespace ADHelper.Tasks {
                 Console.WriteLine(s);
             }
             Console.WriteLine();
-        }
-
-        private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
-            var headerMap = new Dictionary<string, string>();
-            foreach (var key in Patterns.GetKeys()) {
-                var pattern = Patterns.GetPattern(key);
-                foreach (var header in headers) {
-                    if (Regex.IsMatch(header.ToLower(), pattern)) {
-                        headerMap[header] = key;
-                        break;
-                    }
-                }
-            }
-            return headerMap;
         }
     }
 }

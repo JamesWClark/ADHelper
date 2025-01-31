@@ -1,38 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using ADHelper.Utility;
 using ADHelper.Config;
 
 namespace ADHelper.Tasks {
-    class Task_BatchCreateUsers {
+    class Task_BatchCreateUsers : TaskBase {
 
-        private List<string> badSamAccountNames = new List<string>();
-        private Config.Options opts;
-        private string _outputDirectory;
+        public Task_BatchCreateUsers(Config.Options options, string outputDirectory) : base(options, outputDirectory) { }
 
-        public Task_BatchCreateUsers(Config.Options options, string outputDirectory) {
-            opts = options;
-            _outputDirectory = outputDirectory;
-        }
-
-        private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
-            var headerMap = new Dictionary<string, string>();
-            foreach (var key in Patterns.GetKeys()) {
-                var patterns = Patterns.GetPatterns(key);
-                foreach (var header in headers) {
-                    if (patterns.Contains(header.ToLower())) {
-                        headerMap[header] = key;
-                        break;
-                    }
-                }
-            }
-            return headerMap;
-        }
-
-        public void Run() {
-            Console.WriteLine("Task_Batch Run method called");
+        public override void Run() {
+            Console.WriteLine("Task_BatchCreateUsers Run method called");
 
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
@@ -41,12 +19,6 @@ namespace ADHelper.Tasks {
 
                 var headerMap = MapHeadersToKeys(headers);
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
-
-                string success_file_path = Path.Combine(_outputDirectory, $"succeeded.{DateTime.Now.ToFileTime()}.csv");
-                string fail_file_path = Path.Combine(_outputDirectory, $"failed.{DateTime.Now.ToFileTime()}.csv");
-
-                bool successHeadersWritten = false;
-                bool failHeadersWritten = false;
 
                 int count = 0;
                 foreach (var columns in lines) {
@@ -75,14 +47,12 @@ namespace ADHelper.Tasks {
                             case "create_users":
                                 Console.WriteLine($"Creating user: {userFields["Email"]}");
                                 userManager.CreateUser(userFields);
-                                using (var tw = new StreamWriter(success_file_path, true)) {
-                                    if (!successHeadersWritten) {
-                                        tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Password");
-                                        successHeadersWritten = true;
-                                    }
-                                    tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
-                                    Console.WriteLine("created: " + userFields["Email"]);
+                                if (!successHeadersWritten) {
+                                    LogSuccess("Import ID,First Name,Last Name,Email,AD Login,Password");
+                                    successHeadersWritten = true;
                                 }
+                                LogSuccess($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                                Console.WriteLine("created: " + userFields["Email"]);
                                 break;
                             default:
                                 throw new ArgumentException($"Unsupported Task: {opts.Task}");
@@ -90,13 +60,11 @@ namespace ADHelper.Tasks {
                     } catch (Exception ex) {
                         Console.WriteLine("failed: " + userFields["Email"]);
                         Console.WriteLine(ex.Message);
-                        using (var tw = new StreamWriter(fail_file_path, true)) {
-                            if (!failHeadersWritten) {
-                                tw.WriteLine("Import ID,First Name,Last Name,Email,AD Login,Error Message");
-                                failHeadersWritten = true;
-                            }
-                            tw.WriteLine($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
+                        if (!failHeadersWritten) {
+                            LogFailure("Import ID,First Name,Last Name,Email,AD Login,Error Message");
+                            failHeadersWritten = true;
                         }
+                        LogFailure($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{ex.Message.Trim()}");
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                     }
                     count++;

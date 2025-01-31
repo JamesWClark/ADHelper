@@ -9,25 +9,16 @@ using ADHelper.Config;
 using System.DirectoryServices.AccountManagement;
 
 namespace ADHelper.Tasks {
-    class Task_GeneratePasswords {
-
-        private List<string> badSamAccountNames = new List<string>();
-        private Config.Options opts;
-        private string _outputDirectory;
+    class Task_GeneratePasswords : TaskBase {
         private string uniformPassword = String.Empty;
 
-        public Task_GeneratePasswords(Config.Options options, string outputDirectory) {
-            opts = options;
-            _outputDirectory = outputDirectory;
-        }
+        public Task_GeneratePasswords(Config.Options options, string outputDirectory) : base(options, outputDirectory) { }
 
-        public Task_GeneratePasswords(Config.Options options, string outputDirectory, string password) {
-            opts = options;
-            _outputDirectory = outputDirectory;
+        public Task_GeneratePasswords(Config.Options options, string outputDirectory, string password) : base(options, outputDirectory) {
             this.uniformPassword = password;
         }
 
-        public void Run() {
+        public override void Run() {
             Console.WriteLine("Task_GeneratePasswords Run method called");
 
             try {
@@ -121,20 +112,6 @@ namespace ADHelper.Tasks {
                 Console.WriteLine(s);
             }
             Console.WriteLine();
-        }
-
-        private Dictionary<string, string> MapHeadersToKeys(string[] headers) {
-            var headerMap = new Dictionary<string, string>();
-            foreach (var key in Patterns.GetKeys()) {
-                var pattern = Patterns.GetPattern(key);
-                foreach (var header in headers) {
-                    if (Regex.IsMatch(header.ToLower(), pattern)) {
-                        headerMap[header] = key;
-                        break;
-                    }
-                }
-            }
-            return headerMap;
         }
     }
 }
