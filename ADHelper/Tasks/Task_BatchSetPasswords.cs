@@ -49,17 +49,8 @@ namespace ADHelper.Tasks {
                         }
 
                         Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
-                        using (var context = new PrincipalContext(ContextType.Domain, domain)) {
-                            using (var user = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userFields["SamAccountName"])) {
-                                if (user != null) {
-                                    user.SetPassword(userFields["Password"]);
-                                    user.Save();
-                                    Console.WriteLine($"Password set for user: {userFields["SamAccountName"]}");
-                                } else {
-                                    throw new Exception($"User not found: {userFields["SamAccountName"]}");
-                                }
-                            }
-                        }
+                        bool pwdResetRequired = userFields.ContainsKey("PwdResetRequired") && bool.TryParse(userFields["PwdResetRequired"], out bool resetRequired) && resetRequired;
+                        userManager.SetPassword(userFields["SamAccountName"], userFields["Password"], pwdResetRequired);
 
                         if (!successHeadersWritten) {
                             LogSuccess(string.Join(",", headers));

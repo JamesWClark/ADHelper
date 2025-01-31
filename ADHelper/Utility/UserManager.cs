@@ -173,12 +173,15 @@ namespace ADHelper.Utility {
         }
 
 
-        public void SetPassword(string samAccountName, string password) {
+        public void SetPassword(string samAccountName, string password, bool pwdResetRequired = false) {
             Console.WriteLine($"SetPassword called with: {samAccountName}");
             try {
                 using (var user = UserPrincipal.FindByIdentity(_context, samAccountName)) {
                     if (user != null) {
                         user.SetPassword(password);
+                        if (pwdResetRequired) {
+                            user.ExpirePasswordNow();
+                        }
                         user.Save();
                         Console.WriteLine($"Password for {samAccountName} set successfully.");
                     } else {
