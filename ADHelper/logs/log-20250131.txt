@@ -1,0 +1,228 @@
+2025-01-31 16:06:04.795 -08:00 [INF] Program started
+2025-01-31 16:06:05.118 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:06:05.136 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:06:05.213 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:06:05.214 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:06:05.221 -08:00 [INF] CreateUser called with: ImportID=1, FirstName=John, LastName=Doe, Email=johndoe@example.com, SamAccountName=johndoe, Password=Password123, Description=Trainer, Office=Main Office, TelephoneNumber=456-777-5555, Street=, City=, State=, PostalCode=, Mobile=123-456-7890, JobTitle=Trainer, Department=Dark Arts, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe, PwdResetRequired=TRUE
+2025-01-31 16:06:05.273 -08:00 [INF] Network folder already exists at \\DC1\Test\johndoe
+2025-01-31 16:06:05.556 -08:00 [INF] User johndoe created successfully.
+2025-01-31 16:06:05.556 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe
+2025-01-31 16:06:08.486 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:06:08.489 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:06:08.489 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:06:08.489 -08:00 [INF] CreateUser called with: ImportID=2, FirstName=Jane, LastName=Smith, Email=janesmith@example.com, SamAccountName=janesmith, Password=Password456, Description=Engineer, Office=Main Office, TelephoneNumber=555-888-6666, Street=, City=, State=, PostalCode=, Mobile=234-567-8901, JobTitle=Engineer, Department=Engineering, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith, PwdResetRequired=TRUE
+2025-01-31 16:06:08.505 -08:00 [INF] Network folder already exists at \\DC1\Test\janesmith
+2025-01-31 16:06:08.555 -08:00 [INF] User janesmith created successfully.
+2025-01-31 16:06:08.556 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith
+2025-01-31 16:06:09.847 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:06:09.850 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:06:09.850 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:06:09.850 -08:00 [INF] CreateUser called with: ImportID=3, FirstName=Michael, LastName=Brown, Email=michaelbrown@example.com, SamAccountName=michaelbrown, Password=Password123, Description=Manager, Office=Branch Office, TelephoneNumber=666-999-7777, Street=789 Blvd, City=Boulder, State=CO, PostalCode=80301, Mobile=345-678-9012, JobTitle=Manager, Department=Management, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:06:09.864 -08:00 [INF] Network folder already exists at \\DC1\Test\michaelbrown
+2025-01-31 16:06:09.907 -08:00 [INF] User michaelbrown created successfully.
+2025-01-31 16:06:09.908 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:06:09.912 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:06:09.912 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:06:09.912 -08:00 [INF] CreateUser called with: ImportID=4, FirstName=Emily, LastName=Davis, Email=emilydavis@example.com, SamAccountName=emilydavis, Password=Password123, Description=Analyst, Office=Remote, TelephoneNumber=777-000-8888, Street=101 Ave, City=Fort Collins, State=CO, PostalCode=80521, Mobile=456-789-0123, JobTitle=Analyst, Department=Analysis, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:06:09.925 -08:00 [INF] Network folder already exists at \\DC1\Test\emilydavis
+2025-01-31 16:06:09.970 -08:00 [INF] User emilydavis created successfully.
+2025-01-31 16:06:09.971 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:06:09.974 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:06:09.974 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:06:09.974 -08:00 [INF] CreateUser called with: ImportID=5, FirstName=David, LastName=Wilson, Email=davidwilson@example.com, SamAccountName=davidwilson, Password=Password123, Description=Consultant, Office=Satellite Office, TelephoneNumber=888-111-9999, Street=202 St, City=Colorado Springs, State=CO, PostalCode=80903, Mobile=567-890-1234, JobTitle=Consultant, Department=Consulting, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:06:09.985 -08:00 [INF] Network folder already exists at \\DC1\Test\davidwilson
+2025-01-31 16:06:10.028 -08:00 [INF] User davidwilson created successfully.
+2025-01-31 16:06:10.029 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:06:10.031 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:06:10.031 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:06:10.031 -08:00 [INF] CreateUser called with: ImportID=6, FirstName=Emma, LastName=Johnson, Email=emmajohnson@example.com, SamAccountName=emmajohnson, Password=Password123, Description=Intern, Office=Headquarters, TelephoneNumber=999-222-0000, Street=303 Rd, City=Aurora, State=CO, PostalCode=80012, Mobile=678-901-2345, JobTitle=Intern, Department=Internship, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:06:10.042 -08:00 [INF] Network folder already exists at \\DC1\Test\emmajohnson
+2025-01-31 16:06:10.087 -08:00 [INF] User emmajohnson created successfully.
+2025-01-31 16:06:10.088 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:06:10.088 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:06:10.088 -08:00 [INF] create_users task completed successfully
+2025-01-31 16:09:50.166 -08:00 [INF] Program started
+2025-01-31 16:09:50.383 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:09:50.394 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:09:50.443 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:09:50.443 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:09:50.445 -08:00 [INF] CreateUser called with: ImportID=1, FirstName=John, LastName=Doe, Email=johndoe@example.com, SamAccountName=johndoe, Password=Password123, Description=Trainer, Office=Main Office, TelephoneNumber=456-777-5555, Street=, City=, State=, PostalCode=, Mobile=123-456-7890, JobTitle=Trainer, Department=Dark Arts, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe, PwdResetRequired=TRUE
+2025-01-31 16:09:50.488 -08:00 [INF] Network folder already exists at \\DC1\Test\johndoe
+2025-01-31 16:09:50.566 -08:00 [INF] User johndoe created successfully.
+2025-01-31 16:09:50.566 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe
+2025-01-31 16:09:51.900 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:09:51.903 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:09:51.903 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:09:51.903 -08:00 [INF] CreateUser called with: ImportID=2, FirstName=Jane, LastName=Smith, Email=janesmith@example.com, SamAccountName=janesmith, Password=Password456, Description=Engineer, Office=Main Office, TelephoneNumber=555-888-6666, Street=, City=, State=, PostalCode=, Mobile=234-567-8901, JobTitle=Engineer, Department=Engineering, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith, PwdResetRequired=TRUE
+2025-01-31 16:09:51.916 -08:00 [INF] Network folder already exists at \\DC1\Test\janesmith
+2025-01-31 16:09:51.963 -08:00 [INF] User janesmith created successfully.
+2025-01-31 16:09:51.963 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith
+2025-01-31 16:09:53.312 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:09:53.314 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:09:53.314 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:09:53.314 -08:00 [INF] CreateUser called with: ImportID=3, FirstName=Michael, LastName=Brown, Email=michaelbrown@example.com, SamAccountName=michaelbrown, Password=Password123, Description=Manager, Office=Branch Office, TelephoneNumber=666-999-7777, Street=789 Blvd, City=Boulder, State=CO, PostalCode=80301, Mobile=345-678-9012, JobTitle=Manager, Department=Management, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:09:53.326 -08:00 [INF] Network folder already exists at \\DC1\Test\michaelbrown
+2025-01-31 16:09:53.376 -08:00 [INF] User michaelbrown created successfully.
+2025-01-31 16:09:53.377 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:09:53.379 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:09:53.379 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:09:53.380 -08:00 [INF] CreateUser called with: ImportID=4, FirstName=Emily, LastName=Davis, Email=emilydavis@example.com, SamAccountName=emilydavis, Password=Password123, Description=Analyst, Office=Remote, TelephoneNumber=777-000-8888, Street=101 Ave, City=Fort Collins, State=CO, PostalCode=80521, Mobile=456-789-0123, JobTitle=Analyst, Department=Analysis, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:09:53.392 -08:00 [INF] Network folder already exists at \\DC1\Test\emilydavis
+2025-01-31 16:09:53.442 -08:00 [INF] User emilydavis created successfully.
+2025-01-31 16:09:53.443 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:09:53.446 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:09:53.446 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:09:53.446 -08:00 [INF] CreateUser called with: ImportID=5, FirstName=David, LastName=Wilson, Email=davidwilson@example.com, SamAccountName=davidwilson, Password=Password123, Description=Consultant, Office=Satellite Office, TelephoneNumber=888-111-9999, Street=202 St, City=Colorado Springs, State=CO, PostalCode=80903, Mobile=567-890-1234, JobTitle=Consultant, Department=Consulting, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:09:53.457 -08:00 [INF] Network folder already exists at \\DC1\Test\davidwilson
+2025-01-31 16:09:53.501 -08:00 [INF] User davidwilson created successfully.
+2025-01-31 16:09:53.502 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:09:53.504 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:09:53.505 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:09:53.505 -08:00 [INF] CreateUser called with: ImportID=6, FirstName=Emma, LastName=Johnson, Email=emmajohnson@example.com, SamAccountName=emmajohnson, Password=Password123, Description=Intern, Office=Headquarters, TelephoneNumber=999-222-0000, Street=303 Rd, City=Aurora, State=CO, PostalCode=80012, Mobile=678-901-2345, JobTitle=Intern, Department=Internship, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:09:53.515 -08:00 [INF] Network folder already exists at \\DC1\Test\emmajohnson
+2025-01-31 16:09:53.563 -08:00 [INF] User emmajohnson created successfully.
+2025-01-31 16:09:53.564 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:09:53.565 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:09:53.565 -08:00 [INF] create_users task completed successfully
+2025-01-31 16:11:01.897 -08:00 [INF] Program started
+2025-01-31 16:11:02.088 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:11:02.096 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:11:02.137 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:11:02.137 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:11:02.140 -08:00 [INF] CreateUser called with: ImportID=1, FirstName=John, LastName=Doe, Email=johndoe@example.com, SamAccountName=johndoe, Password=Password123, Description=Trainer, Office=Main Office, TelephoneNumber=456-777-5555, Street=, City=, State=, PostalCode=, Mobile=123-456-7890, JobTitle=Trainer, Department=Dark Arts, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe, PwdResetRequired=TRUE
+2025-01-31 16:11:02.192 -08:00 [INF] Network folder already exists at \\DC1\Test\johndoe
+2025-01-31 16:11:02.266 -08:00 [INF] User johndoe created successfully.
+2025-01-31 16:11:02.266 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members johndoe
+2025-01-31 16:11:03.588 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:11:03.591 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:11:03.591 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:11:03.591 -08:00 [INF] CreateUser called with: ImportID=2, FirstName=Jane, LastName=Smith, Email=janesmith@example.com, SamAccountName=janesmith, Password=Password456, Description=Engineer, Office=Main Office, TelephoneNumber=555-888-6666, Street=, City=, State=, PostalCode=, Mobile=234-567-8901, JobTitle=Engineer, Department=Engineering, Company=Acme Corp, ManagerName=jwclark, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith, PwdResetRequired=TRUE
+2025-01-31 16:11:03.603 -08:00 [INF] Network folder already exists at \\DC1\Test\janesmith
+2025-01-31 16:11:03.648 -08:00 [INF] User janesmith created successfully.
+2025-01-31 16:11:03.648 -08:00 [INF] Attempting Script: Get-ADUser -Identity jwclark -Properties memberof | Select-Object -ExpandProperty memberof | Add-ADGroupMember -Members janesmith
+2025-01-31 16:11:05.029 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:11:05.032 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:11:05.032 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:11:05.032 -08:00 [INF] CreateUser called with: ImportID=3, FirstName=Michael, LastName=Brown, Email=michaelbrown@example.com, SamAccountName=michaelbrown, Password=Password123, Description=Manager, Office=Branch Office, TelephoneNumber=666-999-7777, Street=789 Blvd, City=Boulder, State=CO, PostalCode=80301, Mobile=345-678-9012, JobTitle=Manager, Department=Management, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:11:05.048 -08:00 [INF] Network folder already exists at \\DC1\Test\michaelbrown
+2025-01-31 16:11:05.123 -08:00 [INF] User michaelbrown created successfully.
+2025-01-31 16:11:05.124 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:11:05.128 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:11:05.128 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:11:05.128 -08:00 [INF] CreateUser called with: ImportID=4, FirstName=Emily, LastName=Davis, Email=emilydavis@example.com, SamAccountName=emilydavis, Password=Password123, Description=Analyst, Office=Remote, TelephoneNumber=777-000-8888, Street=101 Ave, City=Fort Collins, State=CO, PostalCode=80521, Mobile=456-789-0123, JobTitle=Analyst, Department=Analysis, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:11:05.142 -08:00 [INF] Network folder already exists at \\DC1\Test\emilydavis
+2025-01-31 16:11:05.206 -08:00 [INF] User emilydavis created successfully.
+2025-01-31 16:11:05.207 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:11:05.209 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:11:05.210 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:11:05.210 -08:00 [INF] CreateUser called with: ImportID=5, FirstName=David, LastName=Wilson, Email=davidwilson@example.com, SamAccountName=davidwilson, Password=Password123, Description=Consultant, Office=Satellite Office, TelephoneNumber=888-111-9999, Street=202 St, City=Colorado Springs, State=CO, PostalCode=80903, Mobile=567-890-1234, JobTitle=Consultant, Department=Consulting, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=true
+2025-01-31 16:11:05.220 -08:00 [INF] Network folder already exists at \\DC1\Test\davidwilson
+2025-01-31 16:11:05.266 -08:00 [INF] User davidwilson created successfully.
+2025-01-31 16:11:05.268 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:11:05.271 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:11:05.271 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:11:05.271 -08:00 [INF] CreateUser called with: ImportID=6, FirstName=Emma, LastName=Johnson, Email=emmajohnson@example.com, SamAccountName=emmajohnson, Password=Password123, Description=Intern, Office=Headquarters, TelephoneNumber=999-222-0000, Street=303 Rd, City=Aurora, State=CO, PostalCode=80012, Mobile=678-901-2345, JobTitle=Intern, Department=Internship, Company=Acme Corp, ManagerName=, DistinguishedName=OU=101,OU=Standard Users,OU=Managed Users,DC=schafer,DC=local, HomeDirectory=\\DC1\Test\%username%, HomeDrive=H:, Script=, PwdResetRequired=FALSE
+2025-01-31 16:11:05.284 -08:00 [INF] Network folder already exists at \\DC1\Test\emmajohnson
+2025-01-31 16:11:05.331 -08:00 [INF] User emmajohnson created successfully.
+2025-01-31 16:11:05.332 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:11:05.332 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:11:05.332 -08:00 [INF] create_users task completed successfully
+2025-01-31 16:13:44.654 -08:00 [INF] Program started
+2025-01-31 16:13:44.932 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:13:44.941 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:13:44.982 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:13:44.983 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:13:45.143 -08:00 [INF] User johndoe created successfully.
+2025-01-31 16:13:46.757 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:13:46.765 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:13:46.765 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:13:46.889 -08:00 [INF] User janesmith created successfully.
+2025-01-31 16:13:48.299 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:13:48.302 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:13:48.303 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:13:48.359 -08:00 [INF] User michaelbrown created successfully.
+2025-01-31 16:13:48.360 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:13:48.363 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:13:48.363 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:13:48.425 -08:00 [INF] User emilydavis created successfully.
+2025-01-31 16:13:48.427 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:13:48.431 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:13:48.431 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:13:48.498 -08:00 [INF] User davidwilson created successfully.
+2025-01-31 16:13:48.499 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:13:48.502 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:13:48.502 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:13:48.569 -08:00 [INF] User emmajohnson created successfully.
+2025-01-31 16:13:48.570 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:13:48.570 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:13:48.570 -08:00 [INF] create_users task completed successfully
+2025-01-31 16:16:03.830 -08:00 [INF] Program started
+2025-01-31 16:16:04.032 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:16:04.039 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:16:04.082 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:16:04.083 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:16:04.292 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:16:05.728 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:16:05.732 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:16:05.732 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:16:05.810 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:16:07.175 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:16:07.178 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:16:07.178 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:16:07.258 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:16:07.259 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:16:07.262 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:16:07.262 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:16:07.323 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:16:07.325 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:16:07.328 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:16:07.328 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:16:07.383 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:16:07.384 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:16:07.387 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:16:07.387 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:16:07.442 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:16:07.443 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:16:07.443 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:16:07.443 -08:00 [INF] create_users task completed successfully
+2025-01-31 16:17:46.168 -08:00 [INF] Program started
+2025-01-31 16:17:46.372 -08:00 [INF] Attempting task with options: Task: create_users, Domain: DC1.schafer.local, Input File: C:\Users\jwclark\git\ADHelper/ADHelper/TestData/users.csv, Output Directory: C:\Users\jwclark\git\ADHelper\ADHelper\bin\publish\..\..\..\ADHelper\TestData\Receipts
+2025-01-31 16:17:46.380 -08:00 [INF] Task_BatchCreateUsers Run method called
+2025-01-31 16:17:46.429 -08:00 [INF] Processing user: johndoe@example.com, johndoe
+2025-01-31 16:17:46.429 -08:00 [INF] Creating user: johndoe@example.com
+2025-01-31 16:17:46.629 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:17:48.310 -08:00 [INF] User created: johndoe@example.com
+2025-01-31 16:17:48.317 -08:00 [INF] Processing user: janesmith@example.com, janesmith
+2025-01-31 16:17:48.317 -08:00 [INF] Creating user: janesmith@example.com
+2025-01-31 16:17:48.395 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:17:49.920 -08:00 [INF] User created: janesmith@example.com
+2025-01-31 16:17:49.923 -08:00 [INF] Processing user: michaelbrown@example.com, michaelbrown
+2025-01-31 16:17:49.924 -08:00 [INF] Creating user: michaelbrown@example.com
+2025-01-31 16:17:49.990 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:17:49.990 -08:00 [INF] User created: michaelbrown@example.com
+2025-01-31 16:17:49.994 -08:00 [INF] Processing user: emilydavis@example.com, emilydavis
+2025-01-31 16:17:49.994 -08:00 [INF] Creating user: emilydavis@example.com
+2025-01-31 16:17:50.064 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:17:50.064 -08:00 [INF] User created: emilydavis@example.com
+2025-01-31 16:17:50.067 -08:00 [INF] Processing user: davidwilson@example.com, davidwilson
+2025-01-31 16:17:50.067 -08:00 [INF] Creating user: davidwilson@example.com
+2025-01-31 16:17:50.130 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:17:50.131 -08:00 [INF] User created: davidwilson@example.com
+2025-01-31 16:17:50.134 -08:00 [INF] Processing user: emmajohnson@example.com, emmajohnson
+2025-01-31 16:17:50.134 -08:00 [INF] Creating user: emmajohnson@example.com
+2025-01-31 16:17:50.195 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:17:50.195 -08:00 [INF] User created: emmajohnson@example.com
+2025-01-31 16:17:50.196 -08:00 [INF] 
+
+Failed users:
+2025-01-31 16:17:50.196 -08:00 [INF] create_users task completed successfully

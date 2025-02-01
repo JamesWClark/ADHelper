@@ -12,12 +12,12 @@ namespace ADHelper.Tasks {
         public Task_BatchSetPasswords(Config.Options options, string outputDirectory) : base(options, outputDirectory) { }
 
         public override void Run() {
-            Console.WriteLine("Task_BatchSetPasswords Run method called");
+            Logger.Information("Task_BatchSetPasswords Run method called");
 
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
-                Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
-                Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
+                Logger.Debug("CSV Headers: " + string.Join(", ", headers));
+                Logger.Debug("First CSV Line: " + string.Join(", ", lines[0]));
 
                 var headerMap = MapHeadersToKeys(headers);
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
@@ -40,15 +40,14 @@ namespace ADHelper.Tasks {
                     string distinguishedName = userFields.ContainsKey("DistinguishedName") && !string.IsNullOrEmpty(userFields["DistinguishedName"]) ? userFields["DistinguishedName"] : "OU=Default,DC=domain,DC=com";
 
                     var userManager = new UserManager(domain, distinguishedName);
-                    Console.WriteLine();
-                    Console.WriteLine($"-- UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
+                    Logger.Debug($"UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
 
                     try {
                         if (string.IsNullOrEmpty(userFields["Password"])) {
                             throw new Exception("Password field is missing");
                         }
 
-                        Console.WriteLine($"Setting password for user: {userFields["SamAccountName"]}");
+                        Logger.Information($"Setting password for user: {userFields["SamAccountName"]}");
                         bool pwdResetRequired = userFields.ContainsKey("PwdResetRequired") && bool.TryParse(userFields["PwdResetRequired"], out bool resetRequired) && resetRequired;
                         userManager.SetPassword(userFields["SamAccountName"], userFields["Password"], pwdResetRequired);
 
@@ -57,10 +56,9 @@ namespace ADHelper.Tasks {
                             successHeadersWritten = true;
                         }
                         LogSuccess(string.Join(",", columns.Select(c => c.Contains(",") ? $"\"{c}\"" : c)));
-                        Console.WriteLine($"Setting password for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                        Logger.Information($"Password set for record: {userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
                     } catch (Exception ex) {
-                        Console.WriteLine("failed: " + userFields["Email"]);
-                        Console.WriteLine(ex.Message);
+                        Logger.Error($"Failed to set password for user: {userFields["Email"]}", ex);
                         if (!failHeadersWritten) {
                             LogFailure(string.Join(",", headers) + ",Error Message");
                             failHeadersWritten = true;
@@ -71,13 +69,13 @@ namespace ADHelper.Tasks {
                     count++;
                 }
             } catch (IOException e) {
-                Console.WriteLine(e.Message);
+                Logger.Error("An IO exception occurred while reading the CSV file", e);
             }
-            Console.WriteLine("\n\nfails:");
+
+            Logger.Information("\n\nFailed users:");
             foreach (string s in badSamAccountNames) {
-                Console.WriteLine(s);
+                Logger.Information(s);
             }
-            Console.WriteLine();
         }
     }
 }

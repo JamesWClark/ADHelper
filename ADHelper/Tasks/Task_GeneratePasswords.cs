@@ -19,12 +19,12 @@ namespace ADHelper.Tasks {
         }
 
         public override void Run() {
-            Console.WriteLine("Task_GeneratePasswords Run method called");
+            Logger.Information("Task_GeneratePasswords Run method called");
 
             try {
                 var (headers, lines) = CsvReader.ReadCsvWithHeaders(opts.CsvPath, opts.InDataHeaders);
-                Console.WriteLine("CSV Headers: " + string.Join(", ", headers));
-                Console.WriteLine("First CSV Line: " + string.Join(", ", lines[0]));
+                Logger.Debug("CSV Headers: " + string.Join(", ", headers));
+                Logger.Debug("First CSV Line: " + string.Join(", ", lines[0]));
 
                 var headerMap = MapHeadersToKeys(headers);
                 var headerIndices = HeaderIndexer.GetHeaderIndices(headers);
@@ -60,15 +60,14 @@ namespace ADHelper.Tasks {
                                 if (user != null) {
                                     user.SetPassword(newPassword);
                                     user.Save();
-                                    Console.WriteLine($"Password set for user: {userFields["SamAccountName"]}");
+                                    Logger.Information($"Password set for user: {userFields["SamAccountName"]}");
                                 } else {
                                     throw new Exception($"User not found: {userFields["SamAccountName"]}");
                                 }
                             }
                         }
                     } catch (Exception ex) {
-                        Console.WriteLine($"Failed to set password for user: {userFields["SamAccountName"]}");
-                        Console.WriteLine(ex.Message);
+                        Logger.Error($"Failed to set password for user: {userFields["SamAccountName"]}", ex);
                         badSamAccountNames.Add(userFields["SamAccountName"]);
                         continue;
                     }
@@ -105,13 +104,13 @@ namespace ADHelper.Tasks {
                     count++;
                 }
             } catch (IOException e) {
-                Console.WriteLine(e.Message);
+                Logger.Error("An IO exception occurred while reading the CSV file", e);
             }
-            Console.WriteLine("\n\nfails:");
+
+            Logger.Information("\n\nFailed users:");
             foreach (string s in badSamAccountNames) {
-                Console.WriteLine(s);
+                Logger.Information(s);
             }
-            Console.WriteLine();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.DirectoryServices;
 using System.IO;
 using System.Security.AccessControl;
 using System.Diagnostics;
+using ADHelper.Utility;
 
 namespace ADHelper.Utility {
     class UserManager {
@@ -15,81 +16,104 @@ namespace ADHelper.Utility {
             _context = new PrincipalContext(ContextType.Domain, domain, distinguishedName);
         }
 
-         public void CreateUser(Dictionary<string, string> userFields) {
-            Console.WriteLine($"CreateUser called with: {string.Join(", ", userFields.Select(kv => kv.Key + "=" + kv.Value))}");
+        public void CreateUser(Dictionary<string, string> userFields) {
+            Logger.Debug($"CreateUser called with: {string.Join(", ", userFields.Select(kv => kv.Key + "=" + kv.Value))}");
             using (var entry = new DirectoryEntry($"LDAP://{_context.ConnectedServer}/{_context.Container}")) {
                 using (var newUser = entry.Children.Add($"CN={userFields["FirstName"]} {userFields["LastName"]}", "user")) {
-                    Console.WriteLine("Creating DirectoryEntry object");
-        
-                    // Mandatory fields
-                    newUser.Properties["samAccountName"].Value = userFields["SamAccountName"].Length > 20 ? userFields["SamAccountName"].Substring(0, 20) : userFields["SamAccountName"];
-                    newUser.Properties["userPrincipalName"].Value = $"{userFields["SamAccountName"]}@{_context.ConnectedServer}";
-                    newUser.Properties["givenName"].Value = userFields["FirstName"];
-                    newUser.Properties["sn"].Value = userFields["LastName"];
-                    newUser.Properties["displayName"].Value = userFields.ContainsKey("DisplayName") ? userFields["DisplayName"] : $"{userFields["FirstName"]} {userFields["LastName"]}";
-                    newUser.Properties["mail"].Value = userFields["Email"];
-        
-                    // Optional fields
-                    SetProperty(newUser, "Description", userFields);
-                    SetProperty(newUser, "Office", userFields);
-                    SetProperty(newUser, "TelephoneNumber", userFields);
-                    SetProperty(newUser, "Street", userFields);
-                    SetProperty(newUser, "City", userFields);
-                    SetProperty(newUser, "State", userFields);
-                    SetProperty(newUser, "PostalCode", userFields);
-                    SetProperty(newUser, "Mobile", userFields);
-                    SetProperty(newUser, "JobTitle", userFields);
-                    SetProperty(newUser, "Department", userFields);
-                    SetProperty(newUser, "Company", userFields);
-                    SetProperty(newUser, "ManagerName", userFields);
-        
-                    // Set the manager
-                    if (userFields.ContainsKey("ManagerName") && !string.IsNullOrEmpty(userFields["ManagerName"])) {
-                        string managerDn = GetManagerDn(userFields["ManagerName"]);
-                        newUser.Properties["manager"].Value = managerDn;
-                    }
-        
-                    // Set the home directory and home drive
-                    if (userFields.ContainsKey("HomeDrive") && !userFields.ContainsKey("HomeDirectory")) {
-                        throw new Exception("HomeDrive is specified without HomeDirectory, which is invalid.");
-                    }
-        
-                    if (userFields.ContainsKey("HomeDirectory") && !string.IsNullOrEmpty(userFields["HomeDirectory"])) {
-                        string homeDirectory = userFields["HomeDirectory"].Replace("%username%", userFields["SamAccountName"]);
-                        newUser.Properties["homeDirectory"].Value = homeDirectory;
-        
-                        if (userFields.ContainsKey("HomeDrive") && !string.IsNullOrEmpty(userFields["HomeDrive"])) {
-                            newUser.Properties["homeDrive"].Value = userFields["HomeDrive"];
+                    Logger.Debug("Creating DirectoryEntry object");
+
+                    try {
+                        // Mandatory fields
+                        newUser.Properties["samAccountName"].Value = userFields["SamAccountName"].Length > 20 ? userFields["SamAccountName"].Substring(0, 20) : userFields["SamAccountName"];
+                        newUser.Properties["userPrincipalName"].Value = $"{userFields["SamAccountName"]}@{_context.ConnectedServer}";
+                        newUser.Properties["givenName"].Value = userFields["FirstName"];
+                        newUser.Properties["sn"].Value = userFields["LastName"];
+                        newUser.Properties["displayName"].Value = userFields.ContainsKey("DisplayName") ? userFields["DisplayName"] : $"{userFields["FirstName"]} {userFields["LastName"]}";
+                        newUser.Properties["mail"].Value = userFields["Email"];
+
+                        // Optional fields
+                        SetProperty(newUser, "Description", userFields);
+                        SetProperty(newUser, "Office", userFields);
+                        SetProperty(newUser, "TelephoneNumber", userFields);
+                        SetProperty(newUser, "Street", userFields);
+                        SetProperty(newUser, "City", userFields);
+                        SetProperty(newUser, "State", userFields);
+                        SetProperty(newUser, "PostalCode", userFields);
+                        SetProperty(newUser, "Mobile", userFields);
+                        SetProperty(newUser, "JobTitle", userFields);
+                        SetProperty(newUser, "Department", userFields);
+                        SetProperty(newUser, "Company", userFields);
+                        SetProperty(newUser, "ManagerName", userFields);
+
+                        // Set the manager
+                        if (userFields.ContainsKey("ManagerName") && !string.IsNullOrEmpty(userFields["ManagerName"])) {
+                            string managerDn = GetManagerDn(userFields["ManagerName"]);
+                            newUser.Properties["manager"].Value = managerDn;
                         }
-        
-                        // Create the network folder on the server
-                        CreateNetworkFolder(homeDirectory, userFields["SamAccountName"]);
-                    }
-        
-                    newUser.CommitChanges();
-        
-                    // Set the password
-                    newUser.Invoke("SetPassword", new object[] { userFields["Password"] });
-        
-                    // Enable the account
-                    int val = (int)newUser.Properties["userAccountControl"].Value;
-                    newUser.Properties["userAccountControl"].Value = val & ~0x2; // Enable account
-        
-                    // Require password change at next login
-                    if (userFields.ContainsKey("PwdResetRequired") && bool.TryParse(userFields["PwdResetRequired"], out bool pwdResetRequired) && pwdResetRequired) {
-                        newUser.Properties["pwdLastSet"].Value = 0;
-                    }
-        
-                    newUser.CommitChanges();
-        
-                    Console.WriteLine($"User {userFields["SamAccountName"]} created successfully.");
-        
-                    // Run the script
-                    if (userFields.ContainsKey("Script") && !string.IsNullOrEmpty(userFields["Script"])) {
-                        Console.WriteLine("Attempting Script: " + userFields["Script"]);
-                        RunPowerShell(userFields["Script"]);
+
+                        // Set the home directory and home drive
+                        if (userFields.ContainsKey("HomeDrive") && !userFields.ContainsKey("HomeDirectory")) {
+                            throw new Exception("HomeDrive is specified without HomeDirectory, which is invalid.");
+                        }
+
+                        if (userFields.ContainsKey("HomeDirectory") && !string.IsNullOrEmpty(userFields["HomeDirectory"])) {
+                            string homeDirectory = userFields["HomeDirectory"].Replace("%username%", userFields["SamAccountName"]);
+                            newUser.Properties["homeDirectory"].Value = homeDirectory;
+
+                            if (userFields.ContainsKey("HomeDrive") && !string.IsNullOrEmpty(userFields["HomeDrive"])) {
+                                newUser.Properties["homeDrive"].Value = userFields["HomeDrive"];
+                            }
+
+                            // Create the network folder on the server
+                            CreateNetworkFolder(homeDirectory, userFields["SamAccountName"]);
+                        }
+
+                        newUser.CommitChanges();
+
+                        // Set the password
+                        newUser.Invoke("SetPassword", new object[] { userFields["Password"] });
+
+                        // Enable the account
+                        int val = (int)newUser.Properties["userAccountControl"].Value;
+                        newUser.Properties["userAccountControl"].Value = val & ~0x2; // Enable account
+
+                        // Require password change at next login
+                        if (userFields.ContainsKey("PwdResetRequired") && bool.TryParse(userFields["PwdResetRequired"], out bool pwdResetRequired) && pwdResetRequired) {
+                            newUser.Properties["pwdLastSet"].Value = 0;
+                        }
+
+                        newUser.CommitChanges();
+
+                        Logger.Information($"User created: {userFields["Email"]}");
+
+                        // Run the script
+                        if (userFields.ContainsKey("Script") && !string.IsNullOrEmpty(userFields["Script"])) {
+                            Logger.Debug("Attempting Script: " + userFields["Script"]);
+                            RunPowerShell(userFields["Script"]);
+                        }
+                    } catch (Exception ex) {
+                        Logger.Error($"Error creating user {userFields["SamAccountName"]}: {ex.Message}", ex);
+                        // Rollback user creation
+                        DeleteUser(userFields["SamAccountName"]);
+                        throw;
                     }
                 }
+            }
+        }
+
+        public void DeleteUser(string samAccountName) {
+            Logger.Debug($"DeleteUser called with: {samAccountName}");
+            try {
+                using (var user = UserPrincipal.FindByIdentity(_context, samAccountName)) {
+                    if (user != null) {
+                        user.Delete();
+                        Logger.Information($"User {samAccountName} deleted successfully.");
+                    } else {
+                        Logger.Warning($"User {samAccountName} not found.");
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.Error($"Error deleting user {samAccountName}: {ex.Message}", ex);
             }
         }
 
@@ -103,9 +127,9 @@ namespace ADHelper.Utility {
                 security.AddAccessRule(new FileSystemAccessRule(username, FileSystemRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
                 directoryInfo.SetAccessControl(security);
 
-                Console.WriteLine($"Network folder created at {path} for user {username}");
+                Logger.Debug($"Network folder created at {path} for user {username}");
             } else {
-                Console.WriteLine($"Network folder already exists at {path}");
+                Logger.Debug($"Network folder already exists at {path}");
             }
         }
 
@@ -113,7 +137,7 @@ namespace ADHelper.Utility {
             using (var searcher = new DirectorySearcher(new DirectoryEntry($"LDAP://{_context.Name}"))) {
                 searcher.Filter = $"(&(objectClass=user)(samAccountName={managerSamAccountName}))";
                 searcher.PropertiesToLoad.Add("distinguishedName");
-        
+
                 var result = searcher.FindOne();
                 if (result != null) {
                     return result.Properties["distinguishedName"][0].ToString();
@@ -138,7 +162,7 @@ namespace ADHelper.Utility {
             { "ManagerName", "manager" },
             { "HomeDirectory", "homeDirectory" },
             { "HomeDrive", "homeDrive" },
-            { "PwdResetRequired", "pwdLastReset" }
+            { "PwdResetRequired", "pwdLastSet" }
         };
 
         private void SetProperty(DirectoryEntry entry, string patternKey, Dictionary<string, string> userFields) {
@@ -163,18 +187,17 @@ namespace ADHelper.Utility {
                 process.WaitForExit();
 
                 if (!string.IsNullOrEmpty(output)) {
-                    Console.WriteLine($"Output: {output}");
+                    Logger.Debug($"PowerShell Output: {output}");
                 }
 
                 if (!string.IsNullOrEmpty(error)) {
-                    Console.WriteLine($"Error: {error}");
+                    Logger.Error($"PowerShell Error: {error}");
                 }
             }
         }
 
-
         public void SetPassword(string samAccountName, string password, bool pwdResetRequired = false) {
-            Console.WriteLine($"SetPassword called with: {samAccountName}");
+            Logger.Debug($"SetPassword called with: {samAccountName}");
             try {
                 using (var user = UserPrincipal.FindByIdentity(_context, samAccountName)) {
                     if (user != null) {
@@ -183,14 +206,13 @@ namespace ADHelper.Utility {
                             user.ExpirePasswordNow();
                         }
                         user.Save();
-                        Console.WriteLine($"Password for {samAccountName} set successfully.");
+                        Logger.Information($"Password for {samAccountName} set successfully.");
                     } else {
-                        Console.WriteLine($"User {samAccountName} not found.");
+                        Logger.Warning($"User {samAccountName} not found.");
                     }
                 }
             } catch (Exception ex) {
-                Console.WriteLine($"Error setting password for {samAccountName}: {ex.Message}");
-                Console.WriteLine(ex.StackTrace);
+                Logger.Error($"Error setting password for {samAccountName}: {ex.Message}", ex);
             }
         }
     }
