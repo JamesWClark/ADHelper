@@ -84,7 +84,7 @@ namespace ADHelper.Utility {
 
                         newUser.CommitChanges();
 
-                        Logger.Information($"User created: {userFields["Email"]}");
+                        Logger.Debug($"UserManager: User created: {userFields["Email"]}");
 
                         // Run the script
                         if (userFields.ContainsKey("Script") && !string.IsNullOrEmpty(userFields["Script"])) {
@@ -93,8 +93,8 @@ namespace ADHelper.Utility {
                         }
                     } catch (Exception ex) {
                         Logger.Error($"Error creating user {userFields["SamAccountName"]}: {ex.Message}", ex);
-                        // Rollback user creation
-                        DeleteUser(userFields["SamAccountName"]);
+
+                        // TODO: detect different types of failure and potentially roll back a user with DeleteUser method
                         throw;
                     }
                 }
@@ -107,7 +107,7 @@ namespace ADHelper.Utility {
                 using (var user = UserPrincipal.FindByIdentity(_context, samAccountName)) {
                     if (user != null) {
                         user.Delete();
-                        Logger.Information($"User {samAccountName} deleted successfully.");
+                        Logger.Debug($"User {samAccountName} deleted successfully.");
                     } else {
                         Logger.Warning($"User {samAccountName} not found.");
                     }

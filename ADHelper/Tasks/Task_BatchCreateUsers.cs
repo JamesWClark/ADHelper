@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using ADHelper.Utility;
-using ADHelper.Config;
 
 namespace ADHelper.Tasks {
     class Task_BatchCreateUsers : TaskBase {
@@ -41,21 +40,14 @@ namespace ADHelper.Tasks {
                     Logger.Debug($"UserManager initialized with Domain: {domain}, DistinguishedName: {distinguishedName}");
 
                     try {
-                        Logger.Information($"Processing user: {userFields["Email"]}, {userFields["SamAccountName"]}");
-                        switch (opts.Task) {
-                            case "create_users":
-                                Logger.Information($"Creating user: {userFields["Email"]}");
-                                userManager.CreateUser(userFields);
-                                if (!successHeadersWritten) {
-                                    LogSuccess("Import ID,First Name,Last Name,Email,AD Login,Password");
-                                    successHeadersWritten = true;
-                                }
-                                LogSuccess($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
-                                Logger.Information($"User created: {userFields["Email"]}");
-                                break;
-                            default:
-                                throw new ArgumentException($"Unsupported Task: {opts.Task}");
+                        Logger.Debug($"Processing user: {userFields["Email"]}, {userFields["SamAccountName"]}");
+                        userManager.CreateUser(userFields);
+                        if (!successHeadersWritten) {
+                            LogSuccess("Import ID,First Name,Last Name,Email,AD Login,Password");
+                            successHeadersWritten = true;
                         }
+                        LogSuccess($"{userFields["ImportID"]},{userFields["FirstName"]},{userFields["LastName"]},{userFields["Email"]},{userFields["SamAccountName"]},{userFields["Password"]}");
+                        Logger.Information($"User created: {userFields["Email"]}");
                     } catch (Exception ex) {
                         Logger.Error($"Failed to create user: {userFields["Email"]}", ex);
                         if (!failHeadersWritten) {
