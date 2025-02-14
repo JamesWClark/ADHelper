@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ADHelper.Config {
+﻿namespace ADHelper.Config {
     class Options {
         private string uname, pword; // user 
         private string csvPath; // input files

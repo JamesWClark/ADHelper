@@ -6,7 +6,6 @@ using System.DirectoryServices;
 using System.IO;
 using System.Security.AccessControl;
 using System.Diagnostics;
-using ADHelper.Utility;
 
 namespace ADHelper.Utility {
     class UserManager {

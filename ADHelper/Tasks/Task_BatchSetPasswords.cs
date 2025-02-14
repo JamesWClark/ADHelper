@@ -3,8 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using ADHelper.Utility;
-using ADHelper.Config;
-using System.DirectoryServices.AccountManagement;
 
 namespace ADHelper.Tasks {
     class Task_BatchSetPasswords : TaskBase {
