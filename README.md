@@ -34,7 +34,3 @@ ImportID,FirstName,LastName,Email,SamAccountName,Password,Description,Office,Dis
 The `Create-ADUsers.ps1` script reads the `users.csv` file and creates users in Active Directory based on the information provided. It supports setting various user attributes, creating home directories, and running custom scripts for each user.
 
 For more details, you can view the script source code [here](PowerShell/Create-ADUsers.ps1).
-
-## Conclusion
-
-Using the PowerShell script is a reliable and efficient way to manage Active Directory user creation. It simplifies the process and reduces the potential for errors. We recommend using this approach for your AD user management needs.
