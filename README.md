@@ -1,68 +1,35 @@
 # ADHelper
 
-## Step 1: Prepare the Data
-- It is likely helpful to have an import ID (student ID, employee ID, etc) to match with other data later.
-- Create a column for SAMAccount (concatenate existing columns).
-- Create a column for email address (concatenate SAMAccount with desired email suffix).
-- Remove unecessary columns.
+## Overview
 
-## Step 2: Sanitize User Input
-Consider some examples of inputs that would be invalid or potentially undesirable for an email address:
+ADHelper is a tool designed to help automate the creation of Active Directory users from a CSV file. While the original application was written in C#, we recommend using the provided PowerShell script for its simplicity and reliability.
 
-Nick Name | Last Name | E-Mail | Reason
---- | --- | --- | ---
-Connor | O'Brien | ConnorO'Brien28\@amdg.rockhursths.edu | Apostrophe
-Axel |Garcia-Soto | AxelGarcia-Soto28\@amdg.rockhursths.edu | Hyphen
-Aaron |De La Cruz Benavides | AaronDe La Cruz Benavides28\@amdg.rockhursths.edu | Spaces
-SAMSON |BRADDOCK | SAMSONBRADDOCK28\@amdg.rockhursths.edu | Capitalization
-T.O. |Redmond | T.O.Redmond28\@amdg.rockhursths.edu | Periods
+## How to Use the PowerShell Script
 
-Here are some potential fixes:
-- Use find and replace to search for and replace hyphens, apostrophes, and spaces with nothing.
-- Manually fix capitalization.
+1. **Prepare the CSV File**: Ensure your `users.csv` file is formatted correctly. You can download a sample [users.csv](ADHelper/TestData/users.csv) file to get started.
 
-Nick Name | Last Name | E-Mail | Fix
---- | --- | --- | ---
-Connor | OBrien | ConnorOBrien28\@amdg.rockhursths.edu | Delete apostrophe
-Axel |GarciaSoto | AxelGarciaSoto28\@amdg.rockhursths.edu | Delete hyphen
-Aaron |DeLaCruzBenavides | AaronDeLaCruzBenavides28\@amdg.rockhursths.edu | Delete spaces
-Samson |Braddock | SamsonBraddock28\@amdg.rockhursths.edu | Fix capitalization
-TO |Redmond | TORedmond28\@amdg.rockhursths.edu | Delete periods
+2. **Download the PowerShell Script**: Download the [Create-ADUsers.ps1](ADHelper/TestData/Create-ADUsers.ps1) script.
 
-## Step 3: Download the ADHelper Utility and Config File
-Download and extract the zip file:  
-https://github.com/JamesWClark/ADHelper/blob/main/Release/ADHelper.zip?raw=true
+3. **Place Files in the Same Directory**: Ensure both the `users.csv` file and the `Create-ADUsers.ps1` script are in the same directory.
 
+4. **Run the PowerShell Script**: Open PowerShell and navigate to the directory containing the files. Run the script using the following command:
 
-## Step 3: Export the Data
-Export your data to CSV format, placing it in the same folder as the above zip.
+    ```powershell
+    .\Create-ADUsers.ps1 -CsvPath "users.csv"   
+    ```
 
-## Step 4: Run a Task
-Run with the following tasks: `creat_users` or `set_passwords`
+    This will read the `users.csv` file and create the users in Active Directory.
 
-`./ADHelper.exe -csv users.csv -xml config.xml -task create_users`  
-`./ADHelper.exe -csv users.csv -xml config.xml -task set_passwords`  
+## Sample CSV File
 
-## Appendix
+Here is a sample `users.csv` file format:
 
-The XML config looks like this:
+## Script Details
 
-	<?xml version="1.0" encoding="utf-8" ?>
-	<configuration>
-	  <domain>student.rockhurst.int</domain>
-	  <distinguishedName>OU=2026,OU=Highly Managed,OU=Users,OU=Student.Greenlease,DC=student,DC=rockhurst,DC=int</distinguishedName>
-	  <csv>
-		<headers>true</headers>
-	  </csv>
-	  <password>
-		<generator>true</generator>
-	  </password>
-	</configuration>
+The `Create-ADUsers.ps1` script reads the `users.csv` file and creates users in Active Directory based on the information provided. It supports setting various user attributes, creating home directories, and running custom scripts for each user.
 
-Some info about each field follows...
-	
- * `domain` - the active directory domain we are connecting to
- * `distinguishedName` - the name of the active directory org unit where users are to be created
- * `csv/headers` - true if the csv file has headers, false otherwise
- * `password/generator - will create new passwords if set to `true`, set to `false` if you want to use passwords from the csv file
+For more details, you can view the script source code [here](ADHelper/TestData/Create-ADUsers.ps1).
 
+## Conclusion
+
+Using the PowerShell script is a reliable and efficient way to manage Active Directory user creation. It simplifies the process and reduces the potential for errors. We recommend using this approach for your AD user management needs.
