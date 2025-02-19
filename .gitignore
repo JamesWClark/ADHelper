@@ -6,3 +6,9 @@ ADHelper/TestData/Receipts/*
 ADHelper/failed*
 ADHelper/logs/*
 ADHelper/succeeded*
+
+# Large file patterns
+*.zip
+*.exe
+!Release/*.zip
+!Release/*.exe
