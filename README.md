@@ -63,4 +63,25 @@ When downloading PowerShell scripts from the internet, Windows marks them as pot
       Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
       ```
 
-**Why this happens**: Windows adds a "Zone.Identifier" stream to files downloaded from the internet as a security measure. Scripts created locally won't have this limitation. Pro tip: You could just copy the script content and paste it into a new .ps1 file on your system to bypass this entirely. 😉
+### PowerShell Execution Policy
+
+Before running scripts for the first time, you'll need to set the execution policy. Here are the recommended approaches:
+
+1. **For current session only** (safest):
+    ```powershell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+    ```
+
+2. **For current user**:
+    ```powershell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    ```
+
+3. **For entire system** (requires admin):
+    ```powershell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
+    ```
+
+To check your current policy:
+```powershell
+Get-ExecutionPolicy
