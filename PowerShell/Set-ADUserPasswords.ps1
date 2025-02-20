@@ -1,5 +1,25 @@
+[CmdletBinding()]
+param (
+    [Parameter(Mandatory=$true)]
+    [ValidateScript({
+        if(-not (Test-Path $_)) {
+            throw "CSV file not found: $_"
+        }
+        if(-not ($_ -match "\.csv$")) {
+            throw "File must be a CSV file"
+        }
+        $true
+    })]
+    [string]$CsvPath
+)
+
+# Verify AD module is available
+if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
+    throw "Active Directory module is not installed. Please install RSAT tools."
+}
+
 # Import required modules
-Import-Module ActiveDirectory
+Import-Module ActiveDirectory -ErrorAction Stop
 
 # Function to set AD user password
 function Set-ADUserPasswordFromCsv {
@@ -34,11 +54,23 @@ function Set-ADUserPasswordFromCsv {
 }
 
 # Main script
-param (
-    [string]$CsvPath = "users.csv"
-)
+try {
+    $csv = Import-Csv $CsvPath -ErrorAction Stop
+    if ($csv.Count -eq 0) {
+        throw "CSV file is empty"
+    }
+    
+    # Validate required columns exist
+    $requiredColumns = @('SamAccountName', 'Password')
+    $missingColumns = $requiredColumns | Where-Object { $_ -notin $csv[0].PSObject.Properties.Name }
+    if ($missingColumns) {
+        throw "Missing required columns in CSV: $($missingColumns -join ', ')"
+    }
+} catch {
+    Write-Error "Failed to process CSV file: $_"
+    exit 1
+}
 
-$csv = Import-Csv $CsvPath
 foreach ($user in $csv) {
     try {
         Set-ADUserPasswordFromCsv -UserFields $user
