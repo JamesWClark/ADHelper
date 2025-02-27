@@ -32,7 +32,6 @@ function New-ADUserFromCsv {
         # Basic user parameters
         $userParams = @{
             SamAccountName = $UserFields.SamAccountName
-            UserPrincipalName = "$($UserFields.SamAccountName)@$env:USERDNSDOMAIN"
             GivenName = $UserFields.FirstName 
             Surname = $UserFields.LastName
             Name = "$($UserFields.FirstName) $($UserFields.LastName)"
@@ -40,6 +39,13 @@ function New-ADUserFromCsv {
             EmailAddress = $UserFields.Email
             AccountPassword = (ConvertTo-SecureString $UserFields.Password -AsPlainText -Force)
             Enabled = $true
+        }
+
+        # User UserPrincipalName if it exists, else use SamAccountName
+        $userParams.UserPrincipalName = if ($UserFields.UserPrincipalName) { 
+            "$($UserFields.UserPrincipalName)@$env:USERDNSDOMAIN" 
+        } else { 
+            "$($UserFields.SamAccountName)@$env:USERDNSDOMAIN" 
         }
 
         # Optional parameters
