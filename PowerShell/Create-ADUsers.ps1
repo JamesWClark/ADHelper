@@ -41,9 +41,11 @@ function New-ADUserFromCsv {
             Enabled = $true
         }
 
-        # User UserPrincipalName if it exists, else use SamAccountName
+        # UserPrincipalName logic
         $userParams.UserPrincipalName = if ($UserFields.UserPrincipalName) { 
-            "$($UserFields.UserPrincipalName)@$env:USERDNSDOMAIN" 
+            "$($UserFields.UserPrincipalName)@$($UserFields.UPNSuffix)" 
+        } elseif ($UserFields.UPNSuffix) { 
+            "$($UserFields.SamAccountName)@$($UserFields.UPNSuffix)" 
         } else { 
             "$($UserFields.SamAccountName)@$env:USERDNSDOMAIN" 
         }
