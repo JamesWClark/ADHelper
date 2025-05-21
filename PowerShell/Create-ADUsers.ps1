@@ -1,17 +1,27 @@
+<#
+.SYNOPSIS
+Creates Active Directory users from a CSV or Excel file.
+
+.EXAMPLE
+.\Create-ADUsers.ps1 -FromFile users.csv
+.\Create-ADUsers.ps1 -FromFile users.xlsx
+#>
+
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory=$true)]
-    [ValidateScript({
-        if(-not (Test-Path $_)) {
-            throw "CSV file not found: $_"
-        }
-        if(-not ($_ -match "\.csv$")) {
-            throw "File must be a CSV file"
-        }
-        $true
-    })]
-    [string]$CsvPath
+    [Parameter(HelpMessage="Enter the name or path of a CSV or Excel file (e.g., users.csv or users.xlsx)")]
+    [Alias("Path")]
+    [string]$FromFile
 )
+
+if (-not $FromFile) {
+    Write-Host ""
+    Write-Host "USAGE: .\Create-ADUsers.ps1 -FromFile <users.csv|users.xlsx>" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Example: .\Create-ADUsers.ps1 -FromFile users.xlsx"
+    Write-Host ""
+    exit 1
+}
 
 # Verify AD module is available
 if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
@@ -21,14 +31,51 @@ if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
 # Import required modules
 Import-Module ActiveDirectory -ErrorAction Stop
 
+# Import CSV or XLSX
+if ($FromFile -match '\.xlsx$') {
+    if (-not (Get-Module -ListAvailable -Name ImportExcel)) {
+        throw "ImportExcel module is not installed. Run 'Install-Module ImportExcel' first."
+    }
+    Import-Module ImportExcel -ErrorAction Stop
+    $data = Import-Excel $FromFile
+} else {
+    $data = Import-Csv $FromFile -ErrorAction Stop
+}
+
+# Filter out blank rows
+$data = $data | Where-Object { $_.SamAccountName -or $_.FirstName -or $_.LastName -or $_.Email -or $_.Password }
+
+# Stop if no users are found
+if ($data.Count -eq 0) {
+    throw "Input file is empty"
+}
+
+# Validate required columns exist
+$requiredColumns = @('SamAccountName', 'FirstName', 'LastName', 'Email', 'Password')
+$missingColumns = $requiredColumns | Where-Object { $_ -notin $data[0].PSObject.Properties.Name }
+if ($missingColumns) {
+    throw "Missing required columns in $fileType file: $($missingColumns -join ', ')"
+}
+
+# Warn once if DistinguishedName column is missing
+if ('DistinguishedName' -notin $data[0].PSObject.Properties.Name) {
+    Write-Warning "Column 'DistinguishedName' (OU path) is missing. Users will be created in the default container (usually 'Users' at the domain root)."
+    $response = Read-Host "Continue anyway? (Y/N)"
+    if ($response -notin @('Y','y')) {
+        Write-Host "Aborting."
+        exit 1
+    }
+}
+
 # Function to create AD user
-function New-ADUserFromCsv {
+function New-ADUserFromFile {
     param (
         [Parameter(Mandatory=$true)]
         [PSCustomObject]$UserFields
     )
 
     try {
+        
         # Basic user parameters
         $userParams = @{
             SamAccountName = $UserFields.SamAccountName
@@ -114,26 +161,10 @@ function New-ADUserFromCsv {
 }
 
 # Main script
-try {
-    $csv = Import-Csv $CsvPath -ErrorAction Stop
-    if ($csv.Count -eq 0) {
-        throw "CSV file is empty"
-    }
-    
-    # Validate required columns exist
-    $requiredColumns = @('SamAccountName', 'FirstName', 'LastName', 'Email', 'Password')
-    $missingColumns = $requiredColumns | Where-Object { $_ -notin $csv[0].PSObject.Properties.Name }
-    if ($missingColumns) {
-        throw "Missing required columns in CSV: $($missingColumns -join ', ')"
-    }
-} catch {
-    Write-Error "Failed to process CSV file: $_"
-    exit 1
-}
-
-foreach ($user in $csv) {
+foreach ($user in $data) {
     try {
-        New-ADUserFromCsv -UserFields $user
+        Write-Host "Processing user: $($user.SamAccountName) <$($user.Email)>"
+        New-ADUserFromFile -UserFields $user
     }
     catch {
         Write-Error "Error processing user $($user.Email): $_"

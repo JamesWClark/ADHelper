@@ -1,25 +1,57 @@
+<#
+.SYNOPSIS
+Sets passwords for Active Directory users from a CSV or Excel file.
+
+.EXAMPLE
+.\Set-ADUserPasswords.ps1 -FromFile users.csv
+.\Set-ADUserPasswords.ps1 -FromFile users.xlsx
+#>
+
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory=$true)]
-    [ValidateScript({
-        if(-not (Test-Path $_)) {
-            throw "CSV file not found: $_"
-        }
-        if(-not ($_ -match "\.csv$")) {
-            throw "File must be a CSV file"
-        }
-        $true
-    })]
-    [string]$CsvPath
+    [Parameter(HelpMessage="Enter the path to a CSV or Excel file (e.g., users.csv or users.xlsx)")]
+    [Alias("Path")]
+    [string]$FromFile
 )
+
+if (-not $FromFile) {
+    Write-Host ""
+    Write-Host "USAGE: .\Set-ADUserPasswords.ps1 -FromFile <users.csv|users.xlsx>" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Example: .\Set-ADUserPasswords.ps1 -FromFile users.xlsx"
+    Write-Host ""
+    exit 1
+}
 
 # Verify AD module is available
 if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
     throw "Active Directory module is not installed. Please install RSAT tools."
 }
-
-# Import required modules
 Import-Module ActiveDirectory -ErrorAction Stop
+
+# Import CSV or XLSX
+if ($FromFile -match '\.xlsx$') {
+    if (-not (Get-Module -ListAvailable -Name ImportExcel)) {
+        throw "ImportExcel module is not installed. Run 'Install-Module ImportExcel' first."
+    }
+    Import-Module ImportExcel -ErrorAction Stop
+    $data = Import-Excel $FromFile
+    $fileType = "Excel"
+} else {
+    $data = Import-Csv $FromFile -ErrorAction Stop
+    $fileType = "CSV"
+}
+
+if ($data.Count -eq 0) {
+    throw "$fileType file is empty"
+}
+
+# Validate required columns exist
+$requiredColumns = @('SamAccountName', 'Password')
+$missingColumns = $requiredColumns | Where-Object { $_ -notin $data[0].PSObject.Properties.Name }
+if ($missingColumns) {
+    throw "Missing required columns in ${fileType}: $($missingColumns -join ', ')"
+}
 
 # Function to set AD user password
 function Set-ADUserPasswordFromCsv {
@@ -29,7 +61,6 @@ function Set-ADUserPasswordFromCsv {
     )
 
     try {
-        # Check for required fields
         if (-not $UserFields.SamAccountName) {
             throw "SamAccountName is missing"
         }
@@ -37,10 +68,8 @@ function Set-ADUserPasswordFromCsv {
             throw "Password is missing"
         }
 
-        # Set the password
         Set-ADAccountPassword -Identity $UserFields.SamAccountName -Reset -NewPassword (ConvertTo-SecureString $UserFields.Password -AsPlainText -Force)
 
-        # Require password change at next login if specified
         if ($UserFields.PwdResetRequired -eq "TRUE") {
             Set-ADUser -Identity $UserFields.SamAccountName -ChangePasswordAtLogon $true
         }
@@ -53,25 +82,7 @@ function Set-ADUserPasswordFromCsv {
     }
 }
 
-# Main script
-try {
-    $csv = Import-Csv $CsvPath -ErrorAction Stop
-    if ($csv.Count -eq 0) {
-        throw "CSV file is empty"
-    }
-    
-    # Validate required columns exist
-    $requiredColumns = @('SamAccountName', 'Password')
-    $missingColumns = $requiredColumns | Where-Object { $_ -notin $csv[0].PSObject.Properties.Name }
-    if ($missingColumns) {
-        throw "Missing required columns in CSV: $($missingColumns -join ', ')"
-    }
-} catch {
-    Write-Error "Failed to process CSV file: $_"
-    exit 1
-}
-
-foreach ($user in $csv) {
+foreach ($user in $data) {
     try {
         Set-ADUserPasswordFromCsv -UserFields $user
     }
