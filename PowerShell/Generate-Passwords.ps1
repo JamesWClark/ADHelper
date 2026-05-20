@@ -15,6 +15,13 @@ param (
     [string]$WordList
 )
 
+# ---------------------------------------------------------------------------
+# Configuration — adjust these to change the password format
+# ---------------------------------------------------------------------------
+$NumWords  = 2   # number of words to concatenate
+$NumDigits = 2   # number of trailing digits
+# ---------------------------------------------------------------------------
+
 if (-not $FromFile -or -not $WordList) {
     Write-Host ""
     Write-Host "USAGE: .\Generate-Passwords.ps1 -FromFile <users.csv|users.xlsx> -WordList <wordlist.txt>" -ForegroundColor Yellow
@@ -54,15 +61,14 @@ foreach ($user in $users) {
     # Skip blank rows
     if (-not ($user.SamAccountName -or $user.Email -or $user.Name)) { continue }
 
-    # Generate two random words and two digits, not 67 or 69
-    $word1 = $words | Get-Random
-    $word2 = $words | Get-Random
+    # Generate words and digits
+    $wordPart   = -join (1..$NumWords  | ForEach-Object { $words | Get-Random })
     do {
-        $digits = -join ((0..9) | Get-Random -Count 2)
-    } while ($digits -eq "67" -or $digits -eq "69")
+        $digitPart = -join ((0..9) | Get-Random -Count $NumDigits)
+    } while ($digitPart -eq "67" -or $digitPart -eq "69")
 
     # Combine for password
-    $password = "$word1$word2$digits"
+    $password = "$wordPart$digitPart"
 
     # Update password property
     if ($user.PSObject.Properties.Match('Password')) {

@@ -45,7 +45,7 @@ For organizations using Google Workspace (formerly G Suite), here's a recommende
 1. Create AD users using `Create-ADUsers.ps1`
 2. Run Google Cloud Directory Sync (GCDS) to create corresponding Google accounts
 3. Verify Google Password Sync for Active Directory is installed and running on your domain controller
-4. Use `Set-ADUserPasswords.ps1` to update passwords if needed:
+4. Use [Set-ADUserPasswords.ps1](PowerShell/Set-ADUserPasswords.ps1) to update passwords if needed:
     ```powershell
     .\Set-ADUserPasswords.ps1 -CsvPath "passwords.csv"
     ```
