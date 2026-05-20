@@ -8,6 +8,8 @@ ADHelper is a tool designed to help automate the creation of Active Directory us
 
 1. **Download Required Files**
    - [Create-ADUsers.ps1](PowerShell/Create-ADUsers.ps1)
+   - [Generate-Passwords.ps1](PowerShell/Generate-Passwords.ps1)
+   - [words.txt](PowerShell/words.txt)
    - [Sample users.csv](PowerShell/users.csv)
 
    Note: First time running PowerShell scripts? See [Script Security](#script-security-and-windows-protection) section.
@@ -15,7 +17,14 @@ ADHelper is a tool designed to help automate the creation of Active Directory us
 2. **Prepare Your CSV File**
    Use the sample CSV as a template and modify for your needs.
 
-3. **Run the Script**
+3. **Generate Passwords** *(if your file has an empty Password column)*
+   Use [Generate-Passwords.ps1](PowerShell/Generate-Passwords.ps1) with the included [words.txt](PowerShell/words.txt) word list to populate passwords before creating users:
+   ```powershell
+   .\Generate-Passwords.ps1 -FromFile users.xlsx -WordList words.txt
+   ```
+   Each password is two words followed by two random digits (e.g. `BraveSwift42`). The suffixes `67` and `69` are excluded.
+
+4. **Run the Script**
    ```powershell
    .\Create-ADUsers.ps1 -CsvPath "users.csv"
    ```

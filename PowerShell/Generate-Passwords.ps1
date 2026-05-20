@@ -54,14 +54,12 @@ foreach ($user in $users) {
     # Skip blank rows
     if (-not ($user.SamAccountName -or $user.Email -or $user.Name)) { continue }
 
-    # Generate two random words
+    # Generate two random words and two digits, not 67 or 69
     $word1 = $words | Get-Random
     $word2 = $words | Get-Random
-
-    # Generate two random digits, not 69
     do {
         $digits = -join ((0..9) | Get-Random -Count 2)
-    } while ($digits -eq "69")
+    } while ($digits -eq "67" -or $digits -eq "69")
 
     # Combine for password
     $password = "$word1$word2$digits"
